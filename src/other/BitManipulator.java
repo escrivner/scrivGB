@@ -17,4 +17,20 @@ public class BitManipulator {
             return (int) (val | mask);
         }
     }
+
+    public int setBit(boolean bitState, int val, int pos){
+
+        if((bitState && !isBitSet(val, pos)) || (!bitState && isBitSet(val, pos))){
+
+            return flipBit(val, pos);
+        } else {
+            return val;
+        }
+    }
+
+    public int interpret16Bit(int upper, int lower){
+        int pairValue = upper << 8;
+        pairValue = (pairValue | lower);
+        return pairValue;
+    }
 }

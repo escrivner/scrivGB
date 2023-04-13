@@ -37,6 +37,11 @@ public class Register {
         secondReg = value & 0xFF;
     }
 
+    public void setRegisterPair(int first, int second){
+        firstReg = first;
+        secondReg = second;
+    }
+
     public int getRegisterPair(){
 
         //when reading registers, the first register is the most significant position
@@ -44,6 +49,30 @@ public class Register {
         int pairValue = firstReg << 8;
         pairValue = (pairValue | secondReg);
         return pairValue;
+    }
+
+    public void incrementFirstRegister(int value){
+        firstReg += value;
+    }
+
+    public void decrementFirstRegister(int value){
+        firstReg -= value;
+    }
+
+    public void incrementSecondRegister(int value){
+        secondReg += value;
+    }
+
+    public void decrementSecondRegister(int value){
+        secondReg -= value;
+    }
+
+    public void incrementRegisterPair(int value){
+        setRegisterPair(getRegisterPair() + value);
+    }
+
+    public void decrementRegisterPair(int value){
+        setRegisterPair(getRegisterPair() - value);
     }
 
     
