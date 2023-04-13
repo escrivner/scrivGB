@@ -30,13 +30,15 @@ public class Cartridge {
         while((val = stream.read()) != -1){
 
             rom[pos] = val;
-            System.out.println("index: " + pos + "\tbyte: " + val);
             pos++;
         }
+
+        stream.close();
+        System.out.println("ROM successfully initialized...");
     }
 
     public int readAddress(int address){
         
-        return 0;
+        return rom[address];
     }
 }

@@ -1,9 +1,11 @@
 public class AddressBus{
 
-    CPU cpu;
+    
     Cartridge cartridge;
 
-    public AddressBus(){
+    public AddressBus(Cartridge cartridge){
+
+        this.cartridge = cartridge;
 
     }
     public void write(int value, int address){
@@ -11,6 +13,6 @@ public class AddressBus{
     }
 
     public int read(int address){
-        return 0;
+        return cartridge.readAddress(address);
     }
 }
