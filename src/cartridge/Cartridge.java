@@ -1,3 +1,4 @@
+package cartridge;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -10,10 +11,9 @@ public class Cartridge {
     public Cartridge(String filename){
 
         try {
-            
             loadRom(filename);
-        } catch (Exception e) {
 
+        } catch (Exception e) {
             System.out.println("ROM could not be read.");
             e.printStackTrace();
             System.exit(0);
@@ -37,8 +37,8 @@ public class Cartridge {
         System.out.println("ROM successfully initialized...");
     }
 
-    public int readAddress(int address){
-        
+    public int read(int address){
         return rom[address];
+
     }
 }

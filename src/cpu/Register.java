@@ -1,3 +1,4 @@
+package cpu;
 import other.BitManipulator;
 
 public class Register {
