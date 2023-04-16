@@ -139,6 +139,14 @@ public class CPUMethods {
         }
     }
 
+    public void push(int value){
+
+    }
+
+    public void jump(int value){
+        
+    }
+
     public void rotateThroughCarry(int register, int direction,  int positions){
 
         //rotates the register and sets the rotated in value, to the value rotated out

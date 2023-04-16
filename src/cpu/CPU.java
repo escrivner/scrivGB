@@ -1,5 +1,6 @@
 package cpu;
 import addressBus.AddressBus;
+import addressBus.InterruptRegisters;
 import other.BitManipulator;
 
 
@@ -38,6 +39,9 @@ public class CPU extends CPUMethods{
 
     public void tick(){
 
+        //if there is an interrupt, handles it and returns
+        if(checkForInterrupts()){ return; }
+
         int opcode = fetch();
         execute(opcode);
 
@@ -52,6 +56,40 @@ public class CPU extends CPUMethods{
         increment(PC, 1);
         int opcode = aBus.read(nextAddress);
         return opcode;
+    }
+
+    private boolean checkForInterrupts(){
+
+        InterruptRegisters iRegisters = aBus.getInterruptRegisters();
+        int jumpVector = -1;
+
+        if(!iRegisters.readInterruptsEnabled()){
+            return false;
+        }
+
+        if(iRegisters.isVBlankInterruptRequested() && iRegisters.isVBlankInterruptEnabled()){
+            jumpVector = iRegisters.VBLANK_VECTOR;
+
+        } else if(iRegisters.isSTATInterruptRequested() && iRegisters.isSTATInterruptEnabled()){
+            jumpVector = iRegisters.STAT_VECTOR;
+
+        } else if(iRegisters.isTimerInterruptRequested() && iRegisters.isTimerInterruptEnabled()){
+            jumpVector = iRegisters.TIMER_VECTOR;
+
+        } else if(iRegisters.isSerialInterruptRequested() && iRegisters.isSerialInterruptEnabled()){
+            jumpVector = iRegisters.SERIAL_VECTOR;
+
+        } else if(iRegisters.isJoypadInterruptRequested() && iRegisters.isJoypadInterruptEnabled()){
+            jumpVector = iRegisters.JOYPAD_VECTOR;
+        } else {
+            return false;
+        }
+
+        push(readRegister(PC));
+        writeRegister(PC, jumpVector);
+        iRegisters.disableInterrupts();
+        cycleCounter += 5;
+        return true;
     }
 
     private void printCPUState(int opcode){

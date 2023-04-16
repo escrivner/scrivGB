@@ -4,6 +4,14 @@ import other.BitManipulator;
 
 public class InterruptRegisters {
     
+    //interrupt jump vectors
+    public final int VBLANK_VECTOR = 0x0040;
+    public final int STAT_VECTOR = 0x0048;
+    public final int TIMER_VECTOR = 0x0050;
+    public final int SERIAL_VECTOR = 0x0058;
+    public final int JOYPAD_VECTOR = 0x0060;
+
+    //interrupt values
     private boolean interruptMasterEnableFlag = false;
     private int interruptFlags = 0xE0;
     private int interruptEnabled = 0x00;
