@@ -17,10 +17,18 @@ public class Register {
     }
 
     public void setFirstRegister(int val){
+
+        if(val > 0xFF){
+            val %= 0xFF;
+        }
+        
         firstReg = val;
     }
 
     public void setSecondRegister(int val){
+        if(val > 0xFF){
+            val %= 0xFF;
+        }
         secondReg = val;
     }
 
@@ -52,30 +60,4 @@ public class Register {
         return pairValue;
     }
 
-    public void incrementFirstRegister(int value){
-        firstReg += value;
-    }
-
-    public void decrementFirstRegister(int value){
-        firstReg -= value;
-    }
-
-    public void incrementSecondRegister(int value){
-        secondReg += value;
-    }
-
-    public void decrementSecondRegister(int value){
-        secondReg -= value;
-    }
-
-    public void incrementRegisterPair(int value){
-        setRegisterPair(getRegisterPair() + value);
-    }
-
-    public void decrementRegisterPair(int value){
-        setRegisterPair(getRegisterPair() - value);
-    }
-
-    
-   
 }

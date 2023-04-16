@@ -28,8 +28,8 @@ public class BitManipulator {
         }
     }
 
-    public int interpret16Bit(int upper, int lower){
-        int pairValue = upper << 8;
+    public int interpret16Bit(int higher, int lower){
+        int pairValue = higher << 8;
         pairValue = (pairValue | lower);
         return pairValue;
     }

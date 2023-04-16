@@ -1,11 +1,16 @@
 #!/bin/bash
 #compile statements
-javac AddressBus.java
+javac addressBus/AddressBus.java
+javac cartridge/Cartridge.java
+
+#CPU components
+javac cpu/CPU.java
+javac cpu/CPUMethods.java
+javac cpu/Register.java
+
 javac other/BitManipulator.java
-javac CPU.java
-javac Cartridge.java
+javac ram/RAMBank.java
 javac Main.java
-javac Register.java
 
 #execution
 java Main $1
