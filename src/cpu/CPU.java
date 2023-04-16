@@ -80,10 +80,6 @@ public class CPU extends CPUMethods{
 
         System.out.println("\tSP Register: \t" + readRegister(SP));
         System.out.println("\tPC Register: \t" + readRegister(PC));
-
-
-
-
     }
 
     private void stopInstruction(){

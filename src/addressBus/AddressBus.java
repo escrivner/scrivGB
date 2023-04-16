@@ -6,6 +6,8 @@ public class AddressBus{
 
     Cartridge cartridge;
     RAMBank RAM;
+
+    private int interruptFlags = 0x00;
     
     public AddressBus(Cartridge cartridge){
 

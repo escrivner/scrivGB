@@ -1,6 +1,7 @@
 #!/bin/bash
 #compile statements
 javac addressBus/AddressBus.java
+javac addressBus/InterruptRegisters.java
 javac cartridge/Cartridge.java
 
 #CPU components
