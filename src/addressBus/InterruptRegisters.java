@@ -17,23 +17,23 @@ public class InterruptRegisters {
         interruptMasterEnableFlag = false;
     }
 
-    public boolean areInterruptsEnabled(){
+    public boolean readInterruptsEnabled(){
         return interruptMasterEnableFlag;
     }
 
-    public void setInterruptRequestedFlags(int value){
+    public void writeInterruptRequestedFlags(int value){
         interruptFlags = value | 0xE0;
     }
 
-    public int getInterruptRequestedFlags(){
+    public int readInterruptRequestedFlags(){
         return interruptFlags;
     }
 
-    public void setInterruptEnabledFlags(int value){
+    public void writeInterruptEnabledFlags(int value){
         interruptEnabled = value;
     }
 
-    public int getInterruptEnabledFlags(){
+    public int readInterruptEnabledFlags(){
         return interruptEnabled;
     }
 
