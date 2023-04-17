@@ -293,51 +293,67 @@ public class CPUMethods {
         switch(register){
             case(A):
                 af.setFirstRegister(value);
-                
+                break;
+
             case(F):
                 af.setSecondRegister(value);
+                break;
 
             case(B):
                 bc.setFirstRegister(value);
+                break;
 
             case(C):
                 bc.setSecondRegister(value);
+                break;
 
             case(D):
                 de.setFirstRegister(value);
-            
+                break;
+
             case(E):
                 de.setSecondRegister(value);
+                break;
 
             case(H):
                 hl.setFirstRegister(value);
+                break;
 
             case(L):
                 hl.setSecondRegister(value);
+                break;
 
             case(S):
                 sp.setFirstRegister(value);
-            
+                break;
+
             case(P):
                 sp.setSecondRegister(value);
+                break;
 
             case(AF):
                 af.setRegisterPair(value);
+                break;
 
             case(BC):
                 bc.setRegisterPair(value);
+                break;
 
             case(DE):
                 de.setRegisterPair(value);
+                break;
 
             case(HL):
                 hl.setRegisterPair(value);
+                break;
 
             case(SP):
                 sp.setRegisterPair(value);
+                break;
 
             case(PC):
                 pc.setRegisterPair(value);
+                break;
 
             default:
                 System.out.println("CPUMethods: Invalid register write!!!");

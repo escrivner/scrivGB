@@ -7,7 +7,7 @@ public class AddressBus{
     public final int INTERRUPT_REQUEST_REGISTER = 0xFF0F;
     public final int INTERRUPT_ENABLED_REGISTER = 0xFFFF;
     Cartridge cartridge;
-    InterruptRegisters iRegisters = new InterruptRegisters();
+    InterruptRegisters iRegisters;
     RAMBank RAM;
 
     
@@ -16,6 +16,7 @@ public class AddressBus{
 
         this.cartridge = cartridge;
         RAM = new RAMBank((0xFFFF + 1) - 0x8000);
+        iRegisters = new InterruptRegisters();
 
     }
     

@@ -6,16 +6,6 @@ public class Register {
     private int firstReg = 0x00; 
     private int secondReg = 0x00;
 
-    public static void main(String[] args) {
-        
-        Register x = new Register();
-        BitManipulator bm = new BitManipulator();
-        x.setRegisterPair(0xFFFF);
-        System.out.println("first register: " + x.getFirstRegister());
-        System.out.println("second register: " + x.getSecondRegister());
-        System.out.println("combined register: " + x.getRegisterPair());
-    }
-
     public void setFirstRegister(int val){
 
         if(val > 0xFF){

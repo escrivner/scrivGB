@@ -39,12 +39,15 @@ public class CPU extends CPUMethods{
 
     public void tick(){
 
+        if(cycleCounter > 0) { 
+            return;
+        }
         //if there is an interrupt, handles it and returns
         if(checkForInterrupts()){ return; }
 
         int opcode = fetch();
         execute(opcode);
-
+        cycleCounter--;
         if(isDebuggingModeActive){
             printCPUState(opcode);
         }
@@ -143,7 +146,7 @@ public class CPU extends CPUMethods{
             case 0x01:
                 a = fetch();
                 b = fetch();
-                c = bm.interpret16Bit(b, a);
+                writeRegister(BC, bm.interpret16Bit(b, a));
                 cycleCounter+=3;
                 break;
 
