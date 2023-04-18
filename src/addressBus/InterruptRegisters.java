@@ -25,7 +25,7 @@ public class InterruptRegisters {
         interruptMasterEnableFlag = false;
     }
 
-    public boolean readInterruptsEnabled(){
+    public boolean isMasterFlagEnabled(){
         return interruptMasterEnableFlag;
     }
 
