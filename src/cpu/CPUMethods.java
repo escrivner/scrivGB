@@ -39,52 +39,49 @@ public class CPUMethods {
         rm.writeRegister(register, incrementValue);
     }
 
-    public void checkIncrementCarry(int register, int increment){
-
-        //checks register increments. If it would cause overflow, it sets carry flag.
-        //This should always be ran before increment(), as that will handle overflows.
-        //Does not write to registers, only sets carry flag.
-        //Handles both 8-bit and 16-bit increments.
-
-        int currentRegisterValue = rm.readRegister(register);
-        int incrementValue = currentRegisterValue + increment;
-
-        if(register < AF && incrementValue > 0xFF){
-            rm.setCarryFlag(true);
-
-        } else if(register >= AF && incrementValue > 0xFFFF){
-            rm.setCarryFlag(true);
-
-        }
+    public void checkIncrementCarry8(int a, int b, int c){
+        boolean carryState = ((a & 0xFF) + (b & 0xFF) + c) > 0xFF;
+        rm.setCarryFlag(carryState);
     }
 
-    public void checkIncrementHalfCarry(int register, int increment){
-
+    public void checkIncrementHalfCarry8(int a, int b, int c){
+        boolean carryState = ((a & 0xF) + (b & 0xF) + c) > 0xF;
+        rm.setHalfCarryFlag(carryState);
     }
+
+    public void checkIncrementCarry16(int a, int b, int c){
+        boolean carryState = ((a & 0xFFFF) + (b & 0xFFFF) + c) > 0xFFFF;
+        rm.setCarryFlag(carryState);
+    }
+
+    public void checkIncrementHalfCarry16(int a, int b, int c){
+        boolean carryState = ((a & 0x0FFF) + (b & 0x0FFF) + c) > 0x0FFF;
+        rm.setHalfCarryFlag(carryState);
+    }
+
 
     public void checkForZero(int register){
         rm.setZeroFlag(rm.readRegister(register) == 0);
     }
 
-    public void decrement(int register, int decrement){
-
-        int currentRegisterValue = rm.readRegister(register);
-        int decrementValue = currentRegisterValue - decrement;
-        rm.writeRegister(register, decrementValue);
+    public void checkDecrementCarry8(int a, int b, int c){
+        boolean carryState = ((a & 0xFF) - (b & 0xFF) - c) < 0;
+        rm.setCarryFlag(carryState);
     }
 
-    public void checkDecrementCarry(int register, int decrement){
-
-        int currentRegisterValue = rm.readRegister(register);
-        int decrementValue = currentRegisterValue - decrement;
-
-        if(decrementValue < 0){
-            rm.setCarryFlag(true);
-        }
+    public void checkDecrementHalfCarry8(int a, int b, int c){
+        boolean carryState = ((a & 0xF) - (b & 0xF) - c) < 0;
+        rm.setHalfCarryFlag(carryState);
     }
 
-    public void checkDecrementHalfCarry(int register, int decrement){
-        
+    public void checkDecrementCarry16(int a, int b, int c){
+        boolean carryState = ((a & 0xFFFF) - (b & 0xFFFF) - c) < 0;
+        rm.setCarryFlag(carryState);
+    }
+
+    public void checkDecrementHalfCarry16(int a, int b, int c){
+        boolean carryState = ((a & 0x0FFF) - (b & 0x0FFF) - c) < 0;
+        rm.setHalfCarryFlag(carryState);
     }
 
     public void shift(int register, int direction, int positions){

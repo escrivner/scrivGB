@@ -201,4 +201,38 @@ public class RegisterManager {
     public void setCarryFlag(boolean flagState){
         af.setSecondRegister(bm.setBit(flagState, af.getSecondRegister(), 4));
     }
+
+    public int readZeroFlagValue(){
+        if(bm.isBitSet(af.getSecondRegister(), 7)){
+            return 1;
+        } else {
+            return 0;
+        }
+    }
+
+    public int readSubtractionFlagValue(){
+        if(bm.isBitSet(af.getSecondRegister(), 6)){
+            return 1;
+        } else {
+            return 0;
+        }
+    }
+
+    public int readHalfCarryFlagValue(){
+        if(bm.isBitSet(af.getSecondRegister(), 5)){
+            return 1;
+        } else {
+            return 0;
+        }
+    }
+
+    public int readCarryFlagValue(){
+        if(bm.isBitSet(af.getSecondRegister(), 4)){
+            return 1;
+        } else {
+            return 0;
+        }
+    }
+
+
 }

@@ -35,45 +35,6 @@ public class DefaultOpcodes extends CPUMethods{
             case(0x00):
                 cpu.addOperationCycles(1);
                 break;
-
-            case(0x01):
-                a = cpu.fetch();
-                b = cpu.fetch();
-                c = bm.interpret16Bit(b, a);
-                rm.writeRegister(BC, c);
-                cpu.addOperationCycles(3);
-                break;
-            
-            case(0x02):
-                a = rm.readRegister(A);
-                b = rm.readRegister(BC);
-                bus.write(a, b);
-                cpu.addOperationCycles(2);
-                break;
-
-            case(0x03):
-                increment(BC, 1);
-                cpu.addOperationCycles(2);
-                break;
-
-            case(0x04):
-
-                rm.setSubtractionFlag(false);
-                checkIncrementCarry(B, 1);
-                increment(B, 1);
-                checkForZero(B);
-                cpu.addOperationCycles(1);
-                break;
-
-            case(0x05):
-
-                rm.setCarryFlag(true);
-                checkDecrementCarry(B, 1);
-                decrement(B, 1);
-                checkForZero(B);
-                cpu.addOperationCycles(1);
-                break;
-
         }
     }
 }
