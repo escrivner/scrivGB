@@ -9,9 +9,9 @@ public class Timer {
     private int timerModulo;
     private int timerControl;
     private BitManipulator bm;
-    private AddressBus aBus;
+    private Motherboard aBus;
     
-    public Timer(AddressBus aBus){
+    public Timer(Motherboard aBus){
         bm = new BitManipulator();
         this.aBus = aBus;
     }

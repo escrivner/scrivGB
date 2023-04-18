@@ -23,24 +23,20 @@ public class CPUMethods {
     final static int LEFT = 20;
     final static int RIGHT = 21;
 
-    Register af;
-    Register bc;
-    Register de;
-    Register hl;
-    Register sp;
-    Register pc;
-    BitManipulator bm;
+    private RegisterManager rm;
+    private BitManipulator bm;
 
-    public CPUMethods(){
+    public CPUMethods(RegisterManager rm){
 
         bm = new BitManipulator();
+        this. rm = rm;
     }
 
     public void increment(int register, int increment){
 
-        int currentRegisterValue = readRegister(register);
+        int currentRegisterValue = rm.readRegister(register);
         int incrementValue = currentRegisterValue + increment;
-        writeRegister(register, incrementValue);
+        rm.writeRegister(register, incrementValue);
     }
 
     public void checkIncrementCarry(int register, int increment){
@@ -50,52 +46,64 @@ public class CPUMethods {
         //Does not write to registers, only sets carry flag.
         //Handles both 8-bit and 16-bit increments.
 
-        int currentRegisterValue = readRegister(register);
+        int currentRegisterValue = rm.readRegister(register);
         int incrementValue = currentRegisterValue + increment;
 
         if(register < AF && incrementValue > 0xFF){
-            setCarryFlag(true);
+            rm.setCarryFlag(true);
 
         } else if(register >= AF && incrementValue > 0xFFFF){
-            setCarryFlag(true);
+            rm.setCarryFlag(true);
 
         }
+    }
+
+    public void checkIncrementHalfCarry(int register, int increment){
+
+    }
+
+    public void checkForZero(int register){
+        rm.setZeroFlag(rm.readRegister(register) == 0);
     }
 
     public void decrement(int register, int decrement){
 
-        int currentRegisterValue = readRegister(register);
+        int currentRegisterValue = rm.readRegister(register);
         int decrementValue = currentRegisterValue - decrement;
-        writeRegister(register, decrementValue);
+        rm.writeRegister(register, decrementValue);
     }
 
     public void checkDecrementCarry(int register, int decrement){
 
-        int currentRegisterValue = readRegister(register);
+        int currentRegisterValue = rm.readRegister(register);
         int decrementValue = currentRegisterValue - decrement;
 
         if(decrementValue < 0){
-            setCarryFlag(true);
+            rm.setCarryFlag(true);
         }
+    }
+
+    public void checkDecrementHalfCarry(int register, int decrement){
+        
     }
 
     public void shift(int register, int direction, int positions){
 
-        int registerValue = readRegister(register);
+        int registerValue = rm.readRegister(register);
         
         if(direction == LEFT){
             registerValue = registerValue << positions;
-            writeRegister(registerValue, register);
+            rm.writeRegister(registerValue, register);
 
         } else {
             registerValue = registerValue >> positions;
-            writeRegister(registerValue, register);
+            rm.writeRegister(registerValue, register);
         }
     }
 
     public void rotate(int register, int direction,  int positions){
         //rotates the register and sets the rotated in value, to the carry flag value before the rotation.
-        int registerValue = readRegister(register);
+        int registerValue = rm.readRegister(register);
         boolean carryBit = false;
         boolean rotatedOutBit = false;
         int outBit = 0;
@@ -121,7 +129,7 @@ public class CPUMethods {
         //performs rotation 
         for(int i = 0; i < positions; i++){
 
-            carryBit = isCarryFlagSet();
+            carryBit = rm.isCarryFlagSet();
             rotatedOutBit = bm.isBitSet(registerValue, outBit);
        
             //performs shift in direction
@@ -134,8 +142,8 @@ public class CPUMethods {
 
             //moves outBit value to the inBit position
             registerValue = bm.setBit(carryBit, registerValue, inBit);
-            setCarryFlag(rotatedOutBit);
-            writeRegister(register, registerValue);
+            rm.setCarryFlag(rotatedOutBit);
+            rm.writeRegister(register, registerValue);
         }
     }
 
@@ -150,7 +158,7 @@ public class CPUMethods {
     public void rotateThroughCarry(int register, int direction,  int positions){
 
         //rotates the register and sets the rotated in value, to the value rotated out
-        int registerValue = readRegister(register);
+        int registerValue = rm.readRegister(register);
         boolean carryBit = false;
         int outBit = 0;
         int inBit = 7;
@@ -176,7 +184,7 @@ public class CPUMethods {
         for(int i = 0; i < positions; i++){
 
             carryBit = bm.isBitSet(registerValue, outBit);
-            setCarryFlag(carryBit);
+            rm.setCarryFlag(carryBit);
        
             //performs shift in direction
             if(direction == LEFT){
@@ -188,7 +196,7 @@ public class CPUMethods {
 
             //moves outBit value to the inBit position
             registerValue = bm.setBit(carryBit, registerValue, inBit);
-            writeRegister(register, registerValue);
+            rm.writeRegister(register, registerValue);
             
         }
     }
@@ -197,7 +205,7 @@ public class CPUMethods {
 
         //this method checks to see if a shift or rotate will shift out a 1 bit.
 
-        int currentRegisterValue = readRegister(register);
+        int currentRegisterValue = rm.readRegister(register);
         int endBitPos = 0;
 
         if(register < AF && direction == LEFT){
@@ -214,7 +222,7 @@ public class CPUMethods {
             if(bm.isBitSet(currentRegisterValue, endBitPos)){
 
                 System.out.println("CPUMethods: Carry flag has been set.");
-                setCarryFlag(true);
+                rm.setCarryFlag(true);
                 return;
             }
 
@@ -227,179 +235,6 @@ public class CPUMethods {
 
             }
         }
-    }
-
-
-
-    public int readRegister(int register){
-
-        switch(register){
-            case(A):
-                return af.getFirstRegister();
-                
-            case(F):
-                return af.getSecondRegister();
-            
-            case(B):
-                return bc.getFirstRegister();
-
-            case(C):
-                return bc.getSecondRegister();
-
-            case(D):
-                return de.getFirstRegister();
-            
-            case(E):
-                return de.getSecondRegister();
-
-            case(H):
-                return hl.getFirstRegister();
-            
-            case(L):
-                return hl.getSecondRegister();
-
-            case(S):
-                return sp.getFirstRegister();
-            
-            case(P):
-                return sp.getSecondRegister();
-
-            case(AF):
-                return af.getRegisterPair();
-
-            case(BC):
-                return bc.getRegisterPair();
-
-            case(DE):
-                return de.getRegisterPair();
-
-            case(HL):
-                return hl.getRegisterPair();
-
-            case(SP):
-                return sp.getRegisterPair();
-
-            case(PC):
-                return pc.getRegisterPair();
-
-            default:
-                System.out.println("CPUMethods: Invalid register read!!!");
-                return -1;
-        }
-    }
-
-    public void writeRegister(int register, int value){
-
-        switch(register){
-            case(A):
-                af.setFirstRegister(value);
-                break;
-
-            case(F):
-                af.setSecondRegister(value);
-                break;
-
-            case(B):
-                bc.setFirstRegister(value);
-                break;
-
-            case(C):
-                bc.setSecondRegister(value);
-                break;
-
-            case(D):
-                de.setFirstRegister(value);
-                break;
-
-            case(E):
-                de.setSecondRegister(value);
-                break;
-
-            case(H):
-                hl.setFirstRegister(value);
-                break;
-
-            case(L):
-                hl.setSecondRegister(value);
-                break;
-
-            case(S):
-                sp.setFirstRegister(value);
-                break;
-
-            case(P):
-                sp.setSecondRegister(value);
-                break;
-
-            case(AF):
-                af.setRegisterPair(value);
-                break;
-
-            case(BC):
-                bc.setRegisterPair(value);
-                break;
-
-            case(DE):
-                de.setRegisterPair(value);
-                break;
-
-            case(HL):
-                hl.setRegisterPair(value);
-                break;
-
-            case(SP):
-                sp.setRegisterPair(value);
-                break;
-
-            case(PC):
-                pc.setRegisterPair(value);
-                break;
-
-            default:
-                System.out.println("CPUMethods: Invalid register write!!!");
-        }
-    }
-
-    public boolean isZeroFlagSet(){
-        return bm.isBitSet(af.getSecondRegister(), 7);
-    }
-
-    public void setZeroFlag(boolean flagState){
-        af.setSecondRegister(bm.setBit(flagState, af.getSecondRegister(), 7));
-    }
-
-    public boolean isSubtractionFlagSet(){
-        return bm.isBitSet(af.getSecondRegister(), 6);
-    }
-
-    public void setSubtractionFlag(boolean flagState){
-        af.setSecondRegister(bm.setBit(flagState, af.getSecondRegister(), 6));
-    }
-
-    public boolean isHalfCarryFlagSet(){
-        return bm.isBitSet(af.getSecondRegister(), 5);
-    }
-
-    public void setHalfCarryFlag(boolean flagState){
-        af.setSecondRegister(bm.setBit(flagState, af.getSecondRegister(), 5));
-    }
-
-    public boolean isCarryFlagSet(){
-        return bm.isBitSet(af.getSecondRegister(), 4);
-    }
-
-    public void setCarryFlag(boolean flagState){
-        af.setSecondRegister(bm.setBit(flagState, af.getSecondRegister(), 4));
-    }
-
-    public void passRegisters(Register af, Register bc, Register de, Register hl, Register sp, Register pc ){
-
-        this.af = af;
-        this.bc = bc;
-        this.de = de;
-        this.hl = hl;
-        this.sp = sp;
-        this.pc = pc;
     }
 
 }

@@ -1,4 +1,4 @@
-import addressBus.AddressBus;
+import addressBus.Motherboard;
 import cartridge.Cartridge;
 import cpu.CPU;
 import java.awt.KeyEventDispatcher;
@@ -8,17 +8,17 @@ import java.util.concurrent.TimeUnit;
 
 public class Main {
     
-    public static boolean isDebuggingModeActive = true;
-    public static Cartridge cartridge;
-    public static AddressBus addressBus;
-    public static CPU cpu;
-    public static int cpuTickCounter = 0;
+    private static boolean isDebuggingModeActive = true;
+    private static Cartridge cartridge;
+    private static Motherboard bus;
+    private static CPU cpu;
+    private static int cpuTickCounter = 0;
+    
     public static void main(String[] args) throws InterruptedException{
 
-        cartridge = new Cartridge(args[0]);
-        AddressBus addressBus = new AddressBus(cartridge);
-        cpu = new CPU(addressBus, isDebuggingModeActive);
-        enableDebuggerMode();
+        bus = new Motherboard(args[0]);
+        cartridge = bus.getCartridge();
+        cpu = bus.getCPU();
 
         while(true){
             executeCPUCycle();
@@ -33,19 +33,4 @@ public class Main {
         cpuTickCounter++;
     }
 
-    private static void enableDebuggerMode(){
-
-        KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new KeyEventDispatcher() {
-
-            @Override
-            public boolean dispatchKeyEvent(KeyEvent key) {
-                
-                if(key.getID() == KeyEvent.KEY_PRESSED){
-                    System.out.println("space pressed");
-                }
-                return true;
-            }
-           
-        });
-    }
 }
