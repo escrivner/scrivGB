@@ -19,14 +19,11 @@ public class CPU extends CPUMethods{
 
     public CPU(Motherboard aBus, RegisterManager rm){
 
-        super(rm);
+        super(aBus, rm);
         this.rm = rm;
         this.aBus = aBus;
         bm = aBus.getBitManipulator();
         dCodes = new DefaultOpcodes(aBus, this, rm);
-    
-
-        
     }
 
     public void tick(){

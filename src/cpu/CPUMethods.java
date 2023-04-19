@@ -1,5 +1,6 @@
 package cpu;
 
+import addressBus.Motherboard;
 import other.BitManipulator;
 
 public class CPUMethods {
@@ -24,12 +25,16 @@ public class CPUMethods {
     final static int RIGHT = 21;
 
     private RegisterManager rm;
+    private Motherboard bus;
+    private CPU cpu;
     private BitManipulator bm;
 
-    public CPUMethods(RegisterManager rm){
+    public CPUMethods(Motherboard bus, RegisterManager rm){
 
-        bm = new BitManipulator();
-        this. rm = rm;
+        this.cpu = bus.getCPU();
+        this.bus = bus;
+        this.rm = rm;
+        this.bm = bus.getBitManipulator();
     }
 
     public void increment(int register, int increment){
@@ -84,66 +89,6 @@ public class CPUMethods {
         rm.setHalfCarryFlag(carryState);
     }
 
-    public void shift(int register, int direction, int positions){
-
-        int registerValue = rm.readRegister(register);
-        
-        if(direction == LEFT){
-            registerValue = registerValue << positions;
-            rm.writeRegister(registerValue, register);
-
-        } else {
-            registerValue = registerValue >> positions;
-            rm.writeRegister(registerValue, register);
-        }
-    }
-
-    public void rotate(int register, int direction,  int positions){
-        //rotates the register and sets the rotated in value, to the carry flag value before the rotation.
-        int registerValue = rm.readRegister(register);
-        boolean carryBit = false;
-        boolean rotatedOutBit = false;
-        int outBit = 0;
-        int inBit = 7;
-
-        //sets the bit that will be rotated out, and bit that will be rotated in
-        if(register < AF && direction == LEFT){
-            outBit = 7;
-            inBit = 0;
-
-        } else if(register < AF && direction == RIGHT){
-            outBit = 0;
-            inBit = 7;
-
-        } else if(register >= AF && direction == LEFT){
-            outBit = 15;
-            inBit = 0;
-        } else if(register >= AF && direction == RIGHT){
-            outBit = 0;
-            inBit = 15;
-        }
-
-        //performs rotation 
-        for(int i = 0; i < positions; i++){
-
-            carryBit = rm.isCarryFlagSet();
-            rotatedOutBit = bm.isBitSet(registerValue, outBit);
-       
-            //performs shift in direction
-            if(direction == LEFT){
-                registerValue = registerValue << 1;
-
-            } else if(direction == RIGHT){
-                registerValue = registerValue >> 1;
-            }
-
-            //moves outBit value to the inBit position
-            registerValue = bm.setBit(carryBit, registerValue, inBit);
-            rm.setCarryFlag(rotatedOutBit);
-            rm.writeRegister(register, registerValue);
-        }
-    }
-
     public void push(int value){
 
     }
@@ -152,86 +97,148 @@ public class CPUMethods {
         
     }
 
-    public void rotateThroughCarry(int register, int direction,  int positions){
 
-        //rotates the register and sets the rotated in value, to the value rotated out
-        int registerValue = rm.readRegister(register);
-        boolean carryBit = false;
-        int outBit = 0;
-        int inBit = 7;
+    public int rotateThroughCarry8(int value, int direction){
 
-        //sets the bit that will be rotated out, and bit that will be rotated in
-        if(register < AF && direction == LEFT){
-            outBit = 7;
-            inBit = 0;
+        value = value & 0xFF;
 
-        } else if(register < AF && direction == RIGHT){
-            outBit = 0;
-            inBit = 7;
+        if(direction == LEFT){
+            boolean carryValue = bm.isBitSet(value, 7);
+            value = value << 1;
+            value = bm.setBit(carryValue, value, 0);
+            rm.setCarryFlag(carryValue);
+            return value;
 
-        } else if(register >= AF && direction == LEFT){
-            outBit = 15;
-            inBit = 0;
-        } else if(register >= AF && direction == RIGHT){
-            outBit = 0;
-            inBit = 15;
-        }
-
-        //performs rotation 
-        for(int i = 0; i < positions; i++){
-
-            carryBit = bm.isBitSet(registerValue, outBit);
-            rm.setCarryFlag(carryBit);
-       
-            //performs shift in direction
-            if(direction == LEFT){
-                registerValue = registerValue << 1;
-
-            } else if(direction == RIGHT){
-                registerValue = registerValue >> 1;
-            }
-
-            //moves outBit value to the inBit position
-            registerValue = bm.setBit(carryBit, registerValue, inBit);
-            rm.writeRegister(register, registerValue);
-            
+        } else {
+            boolean carryValue = bm.isBitSet(value, 0);
+            value = value >> 1;
+            value = bm.setBit(carryValue, value, 7);
+            rm.setCarryFlag(carryValue);
+            return value;
         }
     }
 
-    public void checkShiftCarry(int register, int direction, int positions){
+    public int rotateThroughCarry16(int value, int direction){
 
-        //this method checks to see if a shift or rotate will shift out a 1 bit.
+        value = value & 0xFFFF;
 
-        int currentRegisterValue = rm.readRegister(register);
-        int endBitPos = 0;
+        if(direction == LEFT){
+            boolean carryValue = bm.isBitSet(value, 15);
+            value = value << 1;
+            value = bm.setBit(carryValue, value, 0);
+            rm.setCarryFlag(carryValue);
+            return value;
 
-        if(register < AF && direction == LEFT){
-            endBitPos = 7;
-
-        } else if(register >= AF && direction == LEFT){
-            endBitPos = 15;
+        } else {
+            boolean carryValue = bm.isBitSet(value, 0);
+            value = value >> 1;
+            value = bm.setBit(carryValue, value, 15);
+            rm.setCarryFlag(carryValue);
+            return value;
         }
+    }
 
-        //loops for every shifted position
-        for(int i = 0; i < positions; i++){
+    public int rotatePreviousCarry8(int value, int direction){
 
-            //checks if rotated out bit is 1
-            if(bm.isBitSet(currentRegisterValue, endBitPos)){
+        value = value & 0xFFFF;
 
-                System.out.println("CPUMethods: Carry flag has been set.");
-                rm.setCarryFlag(true);
-                return;
-            }
+        if(direction == LEFT){
+            boolean carryValue = bm.isBitSet(value, 7);
+            value = value << 1;
+            value = bm.setBit(rm.isCarryFlagSet(), value, 0);
+            rm.setCarryFlag(carryValue);
+            return value;
 
-            //shifts copied register
-            if(direction == LEFT){
-                currentRegisterValue = currentRegisterValue << 1;
-
-            } else {
-                currentRegisterValue = currentRegisterValue >> 1;
-
-            }
+        } else {
+            boolean carryValue = bm.isBitSet(value, 0);
+            value = value >> 1;
+            value = bm.setBit(rm.isCarryFlagSet(), value, 7);
+            rm.setCarryFlag(carryValue);
+            return value;
         }
+    }
+
+    public int rotatePreviousCarry16(int value, int direction){
+
+        value = value & 0xFFFF;
+
+        if(direction == LEFT){
+            boolean carryValue = bm.isBitSet(value, 15);
+            value = value << 1;
+            value = bm.setBit(rm.isCarryFlagSet(), value, 0);
+            rm.setCarryFlag(carryValue);
+            return value;
+
+        } else {
+            boolean carryValue = bm.isBitSet(value, 0);
+            value = value >> 1;
+            value = bm.setBit(rm.isCarryFlagSet(), value, 15);
+            rm.setCarryFlag(carryValue);
+            return value;
+        }
+    }
+
+    public void opcodeLD(int writeRegister, int readRegister){
+        int readValue = rm.readRegister(readRegister);
+        rm.writeRegister(writeRegister, readValue);
+    }
+
+    public void opcodeINCFlags(int register){
+        int value = rm.readRegister(register);
+        rm.writeRegister(register, value+1);
+        rm.setSubtractionFlag(false);
+        checkIncrementHalfCarry8(value, 1, 0);
+        checkForZero(register);
+    }
+
+    public void opcodeINCNoFlags(int register){
+        int value = rm.readRegister(register);
+        rm.writeRegister(register, value+1);
+    }
+
+    public void opcodeDECFlags(int register){
+        int value = rm.readRegister(register);
+        rm.writeRegister(register, value-1);
+        checkForZero(register);
+        rm.setSubtractionFlag(true);
+        checkDecrementHalfCarry8(value, 1, 0);
+    }
+
+    public void opcodeDECNoFlags(int register){
+        int value = rm.readRegister(register);
+        rm.writeRegister(register, value-1);
+    }
+
+    public void opcodeRRC(int register){
+        int value = rm.readRegister(register);
+        value = rotateThroughCarry8(value, RIGHT);
+        rm.setZeroFlag(false);
+        rm.setSubtractionFlag(false);
+        rm.setHalfCarryFlag(false);
+    }
+
+    public void opcodeRLC(int register){
+        int value = rm.readRegister(register);
+        value = rotateThroughCarry8(value, LEFT);
+        rm.setZeroFlag(false);
+        rm.setSubtractionFlag(false);
+        rm.setHalfCarryFlag(false);
+    }
+
+    public void opcodeRR(int register){
+        int value = rm.readRegister(register);
+        value = rotatePreviousCarry8(value, RIGHT);
+        rm.setZeroFlag(false);
+        rm.setSubtractionFlag(false);
+        rm.setHalfCarryFlag(false);
+    }
+
+    public void opcodeRL(int register){
+        int value = rm.readRegister(register);
+        value = rotatePreviousCarry8(value, LEFT);
+        rm.setZeroFlag(false);
+        rm.setSubtractionFlag(false);
+        rm.setHalfCarryFlag(false);
     }
 
 }
