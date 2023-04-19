@@ -123,7 +123,7 @@ public class CPU extends CPUMethods{
         cycleCounter = cycles;
     }
 
-    private void stopInstruction(){
+    public void stop(){
 
         System.out.println("STOP instruction read...");
     }

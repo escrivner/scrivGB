@@ -241,4 +241,13 @@ public class CPUMethods {
         rm.setHalfCarryFlag(false);
     }
 
+    public void opcodeADD(int writeRegister, int readRegister){
+        int readValue = rm.readRegister(readRegister);
+        int writeValue = rm.readRegister(writeRegister);
+        rm.writeRegister(writeRegister, writeValue + readValue);
+        rm.setSubtractionFlag(false);
+        checkIncrementHalfCarry16(readValue, writeValue, 0);
+        checkIncrementCarry16(readValue, writeValue, 0);
+    }
+
 }

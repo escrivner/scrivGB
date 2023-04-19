@@ -143,6 +143,96 @@ public class DefaultOpcodes extends CPUMethods{
                 cpu.addOperationCycles(1);
                 break;
 
+            case(0x10):
+                cpu.stop();
+                cpu.addOperationCycles(1);
+                break;
+
+            case(0x11):
+                a = cpu.fetch();
+                b = cpu.fetch();
+                c = bm.interpret16Bit(b, a);
+                rm.writeRegister(DE, c);
+                cpu.addOperationCycles(3);
+                break;
+
+            case(0x12):
+                a = rm.readRegister(A);
+                b = rm.readRegister(DE);
+                bus.write(a, b);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0x13):
+                opcodeINCNoFlags(DE);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0x14):
+                opcodeINCFlags(D);
+                cpu.addOperationCycles(1);
+                break;
+
+            case(0x15):
+                opcodeDECFlags(D);
+                break;
+
+            case(0x16):
+                a = cpu.fetch();
+                rm.writeRegister(D, a);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0x17):
+                opcodeRL(A);
+                cpu.addOperationCycles(1);
+                break;
+
+            case(0x18):
+                a = rm.readRegister(PC);
+                b = cpu.fetch();
+                rm.writeRegister(PC, a + b);
+                cpu.addOperationCycles(3);
+                break;
+
+            case(0x19):
+                opcodeADD(HL, DE);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0x1A):
+                a = rm.readRegister(DE);
+                b = bus.read(a);
+                rm.writeRegister(A, b);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0x1B):
+                opcodeDECNoFlags(BC);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0x1C):
+                opcodeINCFlags(E);
+                cpu.addOperationCycles(1);
+                break;
+
+            case(0x1D):
+                opcodeDECFlags(E);
+                cpu.addOperationCycles(1);
+                break;
+
+            case(0x1E):
+                a = cpu.fetch();
+                rm.writeRegister(E, a);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0x1F):
+                opcodeRR(A);
+                cpu.addOperationCycles(1);
+                break;
+
         }
     }
 }
