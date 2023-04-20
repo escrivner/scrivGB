@@ -31,6 +31,7 @@ public class Motherboard{
     
     public void write(int value, int address){
 
+        
         if(address == INTERRUPT_REQUEST_REGISTER){
             iRegisters.writeInterruptRequestedFlags(value);
 

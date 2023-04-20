@@ -7,18 +7,10 @@ public class Register {
     private int secondReg = 0x00;
 
     public void setFirstRegister(int val){
-
-        if(val > 0xFF){
-            val %= 0xFF;
-        }
-        
         firstReg = val;
     }
 
     public void setSecondRegister(int val){
-        if(val > 0xFF){
-            val %= 0xFF;
-        }
         secondReg = val;
     }
 

@@ -45,52 +45,52 @@ public class RegisterManager {
 
         switch(register){
             case(A):
-                return af.getFirstRegister();
+                return af.getFirstRegister() & 0xFF;
                 
             case(F):
-                return af.getSecondRegister();
+                return af.getSecondRegister() & 0xFF;
             
             case(B):
-                return bc.getFirstRegister();
+                return bc.getFirstRegister() & 0xFF;
 
             case(C):
-                return bc.getSecondRegister();
+                return bc.getSecondRegister() & 0xFF;
 
             case(D):
-                return de.getFirstRegister();
+                return de.getFirstRegister() & 0xFF;
             
             case(E):
-                return de.getSecondRegister();
+                return de.getSecondRegister() & 0xFF;
 
             case(H):
-                return hl.getFirstRegister();
+                return hl.getFirstRegister() & 0xFF;
             
             case(L):
-                return hl.getSecondRegister();
+                return hl.getSecondRegister() & 0xFF;
 
             case(S):
-                return sp.getFirstRegister();
+                return sp.getFirstRegister() & 0xFF;
             
             case(P):
-                return sp.getSecondRegister();
+                return sp.getSecondRegister() & 0xFF;
 
             case(AF):
-                return af.getRegisterPair();
+                return af.getRegisterPair() & 0xFFFF;
 
             case(BC):
-                return bc.getRegisterPair();
+                return bc.getRegisterPair() & 0xFFFF;
 
             case(DE):
-                return de.getRegisterPair();
+                return de.getRegisterPair() & 0xFFFF;
 
             case(HL):
-                return hl.getRegisterPair();
+                return hl.getRegisterPair() & 0xFFFF;
 
             case(SP):
-                return sp.getRegisterPair();
+                return sp.getRegisterPair() & 0xFFFF;
 
             case(PC):
-                return pc.getRegisterPair();
+                return pc.getRegisterPair() & 0xFFFF;
 
             default:
                 System.out.println("CPUMethods: Invalid register read!!!");
@@ -102,67 +102,67 @@ public class RegisterManager {
 
         switch(register){
             case(A):
-                af.setFirstRegister(value);
+                af.setFirstRegister(value & 0xFF);
                 break;
 
             case(F):
-                af.setSecondRegister(value);
+                af.setSecondRegister(value & 0xFF);
                 break;
 
             case(B):
-                bc.setFirstRegister(value);
+                bc.setFirstRegister(value & 0xFF);
                 break;
 
             case(C):
-                bc.setSecondRegister(value);
+                bc.setSecondRegister(value & 0xFF);
                 break;
 
             case(D):
-                de.setFirstRegister(value);
+                de.setFirstRegister(value & 0xFF);
                 break;
 
             case(E):
-                de.setSecondRegister(value);
+                de.setSecondRegister(value & 0xFF);
                 break;
 
             case(H):
-                hl.setFirstRegister(value);
+                hl.setFirstRegister(value & 0xFF);
                 break;
 
             case(L):
-                hl.setSecondRegister(value);
+                hl.setSecondRegister(value & 0xFF);
                 break;
 
             case(S):
-                sp.setFirstRegister(value);
+                sp.setFirstRegister(value & 0xFF);
                 break;
 
             case(P):
-                sp.setSecondRegister(value);
+                sp.setSecondRegister(value & 0xFF);
                 break;
 
             case(AF):
-                af.setRegisterPair(value);
+                af.setRegisterPair(value & 0xFFFF);
                 break;
 
             case(BC):
-                bc.setRegisterPair(value);
+                bc.setRegisterPair(value & 0xFFFF);
                 break;
 
             case(DE):
-                de.setRegisterPair(value);
+                de.setRegisterPair(value & 0xFFFF);
                 break;
 
             case(HL):
-                hl.setRegisterPair(value);
+                hl.setRegisterPair(value & 0xFFFF);
                 break;
 
             case(SP):
-                sp.setRegisterPair(value);
+                sp.setRegisterPair(value & 0xFFFF);
                 break;
 
             case(PC):
-                pc.setRegisterPair(value);
+                pc.setRegisterPair(value & 0xFFFF);
                 break;
 
             default:
