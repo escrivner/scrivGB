@@ -21,12 +21,12 @@ public class Motherboard{
     
     public Motherboard(String romFile){
 
+        bm = new BitManipulator();
         cartridge = new Cartridge(romFile);
         rm = new RegisterManager();
         cpu = new CPU(this, rm);
         RAM = new RAMBank((0xFFFF + 1) - 0x8000);
         iRegisters = new InterruptRegisters();
-        bm = new BitManipulator();
     }
     
     public void write(int value, int address){

@@ -8,7 +8,7 @@ public class CPU extends CPUMethods{
     
     public static boolean isDebuggingModeActive = true;
     private Motherboard aBus;
-    private int cycleCounter;
+    public int cycleCounter;
     private BitManipulator bm;
     private RegisterManager rm;
     private DefaultOpcodes dCodes;
@@ -24,13 +24,19 @@ public class CPU extends CPUMethods{
         this.aBus = aBus;
         bm = aBus.getBitManipulator();
         dCodes = new DefaultOpcodes(aBus, this, rm);
+        rm.writeRegister(PC, 0x100);
     }
 
     public void tick(){
 
         if(cycleCounter > 0) { 
+            cycleCounter--;
             return;
+        } else if(cycleCounter < 0){
+            cycleCounter = 0;
         }
+
+        
         //if there is an interrupt, handles it and returns
         if(checkForInterrupts()){ return; }
 
@@ -44,9 +50,8 @@ public class CPU extends CPUMethods{
         }
         
         cycleCounter--;
-        if(isDebuggingModeActive){
-            printCPUState(opcode);
-        }
+        printCPUState(opcode);
+        
     }
 
     public int fetch(){

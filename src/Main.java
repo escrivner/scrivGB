@@ -28,7 +28,7 @@ public class Main {
 
     private static void executeCPUCycle(){
 
-        System.out.println("CPU Tick " + cpuTickCounter);
+        System.out.println("CPU Tick " + cpuTickCounter + "\tremainding ticks: " + cpu.cycleCounter);
         cpu.tick();
         cpuTickCounter++;
     }
