@@ -808,9 +808,106 @@ public class DefaultOpcodes extends CPUMethods{
                 opcodeLD(A, A);
                 cpu.addOperationCycles(1);
                 break;
+
+            case(0x80):
+                opcodeADD(A, B);
+                cpu.addOperationCycles(1);
+                break;
              
+            case(0x81):
+                opcodeADD(A, C);
+                cpu.addOperationCycles(1);
+                break;
              
+            case(0x82):
+                opcodeADD(A, D);
+                cpu.addOperationCycles(1);
+                break;
+
+            case(0x83):
+                opcodeADD(A, E);
+                cpu.addOperationCycles(1);
+                break;
              
+            case(0x84):
+                opcodeADD(A, H);
+                cpu.addOperationCycles(1);
+                break;
+             
+            case(0x85):
+                opcodeADD(A, L);
+                cpu.addOperationCycles(1);
+                break;
+             
+            case(0x86):
+                a = rm.readRegister(HL);
+                b = bus.read(a);
+                c = rm.readRegister(A);
+                rm.writeRegister(A, b + c);
+                checkForZero(A);
+                rm.setSubtractionFlag(false);
+                checkIncrementHalfCarry8(b, c, 0);
+                checkIncrementCarry8(b, c, 0);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0x87):
+                opcodeADD(A, A);
+                cpu.addOperationCycles(1);
+                break;
+            
+            case(0x88):
+                opcodeADC(A, B);
+                cpu.addOperationCycles(1);
+                break;
+             
+            case(0x89):
+                opcodeADC(A, C);
+                cpu.addOperationCycles(1);
+                break;
+
+            case(0x8A):
+                opcodeADC(A, D);
+                cpu.addOperationCycles(1);
+                break;
+
+            case(0x8B):
+                opcodeADC(A, E);
+                cpu.addOperationCycles(1);
+                break;
+
+            case(0x8C):
+                opcodeADC(A, H);
+                cpu.addOperationCycles(1);
+                break;
+
+            case(0x8D):
+                opcodeADC(A, L);
+                cpu.addOperationCycles(1);
+                break;
+
+            case(0x8E):
+                a = rm.readRegister(HL);
+                b = bus.read(a);
+                c = rm.readRegister(A);
+                d = rm.readCarryFlagValue();
+                rm.writeRegister(A, b + c + d);
+                checkForZero(A);
+                rm.setSubtractionFlag(false);
+                checkIncrementHalfCarry8(b, c, d);
+                checkIncrementCarry8(b, c, d);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0x8F):
+                opcodeADC(A, A);
+                cpu.addOperationCycles(1);
+                break;
+
+
+
+            
+            
              
              
              

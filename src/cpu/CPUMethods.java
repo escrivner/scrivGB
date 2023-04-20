@@ -246,8 +246,20 @@ public class CPUMethods {
         int writeValue = rm.readRegister(writeRegister);
         rm.writeRegister(writeRegister, writeValue + readValue);
         rm.setSubtractionFlag(false);
+        checkForZero(writeRegister);
         checkIncrementHalfCarry16(readValue, writeValue, 0);
         checkIncrementCarry16(readValue, writeValue, 0);
+    }
+
+    public void opcodeADC(int writeRegister, int readRegister){
+        int readValue = rm.readRegister(readRegister);
+        int writeValue = rm.readRegister(writeRegister);
+        int carryValue = rm.readCarryFlagValue();
+        rm.writeRegister(writeRegister, writeValue + readValue + carryValue);
+        rm.setSubtractionFlag(false);
+        checkForZero(writeRegister);
+        checkIncrementHalfCarry8(writeValue, readValue, carryValue);
+        checkIncrementCarry8(writeValue, readValue, carryValue);
     }
 
 
