@@ -31,7 +31,10 @@ public class Motherboard{
     
     public void write(int value, int address){
 
-        
+        //bitmasks the size of the parameters
+        value = value & 0xFF;
+        address = address & 0xFFFF;
+
         if(address == INTERRUPT_REQUEST_REGISTER){
             iRegisters.writeInterruptRequestedFlags(value);
 

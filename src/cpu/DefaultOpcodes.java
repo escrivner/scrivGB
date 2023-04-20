@@ -345,6 +345,130 @@ public class DefaultOpcodes extends CPUMethods{
                 cpu.addOperationCycles(1);
                 break;
 
+            case(0x30):
+                a = (byte) cpu.fetch();
+
+                if(!rm.isCarryFlagSet()){
+                    b = rm.readRegister(PC);
+                    rm.writeRegister(PC, a + b);
+                    cpu.addOperationCycles(3);
+
+                } else {
+                    cpu.addOperationCycles(2);
+                }
+
+                break;
+
+            case(0x31):
+                a = cpu.fetch();
+                b = cpu.fetch();
+                c = bm.interpret16Bit(b, a);
+                rm.writeRegister(SP, c);
+                cpu.addOperationCycles(3);
+                break;
+
+            case(0x32):
+                a = rm.readRegister(A);
+                b = rm.readRegister(HL);
+                bus.write(a, b);
+                rm.writeRegister(HL, b-1);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0x33):
+                opcodeINCNoFlags(SP);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0x34):
+                a = rm.readRegister(HL);
+                b = bus.read(a);
+                bus.write(b+1, a);
+                rm.setZeroFlag(bus.read(a) == 0);
+                rm.setSubtractionFlag(false);
+                checkIncrementHalfCarry8(b, 1, 0);
+                cpu.addOperationCycles(3);
+                break;
+
+            case(0x35):
+                a = rm.readRegister(HL);
+                b = bus.read(a);
+                bus.write(b-1, a);
+                rm.setZeroFlag(bus.read(a) == 0);
+                rm.setSubtractionFlag(true);
+                checkDecrementHalfCarry8(b, 1, 0);
+                cpu.addOperationCycles(3);
+                break;
+
+            case(0x36):
+                a = cpu.fetch();
+                b = rm.readRegister(HL);
+                bus.write(a, b);
+                cpu.addOperationCycles(3);
+                break;
+
+            case(0x37):
+                rm.setSubtractionFlag(false);
+                rm.setHalfCarryFlag(false);
+                rm.setCarryFlag(true);
+                cpu.addOperationCycles(3);
+                break;
+
+            case(0x38):
+                a = (byte) cpu.fetch();
+
+                if(rm.isCarryFlagSet()){
+                    b = rm.readRegister(PC);
+                    rm.writeRegister(PC, a+b);
+                    cpu.addOperationCycles(3);
+        
+                } else {
+                    cpu.addOperationCycles(2);
+                }
+
+                break;
+
+            case(0x39):
+                opcodeADD(HL, SP);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0x3A):
+                a = rm.readRegister(HL);
+                b = bus.read(a);
+                rm.writeRegister(A, b);
+                rm.writeRegister(HL, a-1);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0x3B):
+                opcodeDECNoFlags(SP);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0x3C):
+                opcodeINCFlags(A);
+                cpu.addOperationCycles(1);
+                break;
+
+            case(0x3D):
+                opcodeDECFlags(A);
+                cpu.addOperationCycles(1);
+                break;
+
+            case(0x3E):
+                a = cpu.fetch();
+                rm.writeRegister(A, a);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0x3F):
+                rm.setSubtractionFlag(false);
+                rm.setHalfCarryFlag(false);
+                rm.setCarryFlag(!rm.isCarryFlagSet());
+                cpu.addOperationCycles(1);
+                break;
+
         }
     }
 }
