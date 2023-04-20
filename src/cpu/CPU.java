@@ -129,8 +129,11 @@ public class CPU extends CPUMethods{
     }
 
     public void stop(){
-
         System.out.println("STOP instruction read...");
+    }
+
+    public void halt(){
+        System.out.println("HALT instruction read...");
     }
 
     
