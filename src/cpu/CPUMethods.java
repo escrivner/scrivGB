@@ -272,6 +272,38 @@ public class CPUMethods {
         checkDecrementCarry8(accValue, regValue, 0);
     }
 
+    public void opcodeSBC(int register){
+        int accValue = rm.readRegister(A);
+        int regValue = rm.readRegister(register);
+        int carryValue = rm.readCarryFlagValue();
+        rm.writeRegister(A, accValue - regValue - carryValue);
+        rm.setSubtractionFlag(true);
+        checkForZero(A);
+        checkDecrementHalfCarry8(accValue, regValue, carryValue);
+        checkDecrementCarry8(accValue, regValue, carryValue);
+    }
 
+    public void opcodeAND(int register){
+        int accValue = rm.readRegister(A);
+        int regValue = rm.readRegister(register);
+        int and = regValue & accValue;
+        rm.writeRegister(A, and);
+        checkForZero(A);
+        rm.setSubtractionFlag(false);
+        rm.setHalfCarryFlag(true);
+        rm.setCarryFlag(false);
+    }
+
+    public void opcodeXOR(int register){
+        int accValue = rm.readRegister(A);
+        int regValue = rm.readRegister(register);
+        int xor = accValue ^ regValue;
+        rm.writeRegister(A, xor);
+        checkForZero(A);
+        rm.setSubtractionFlag(false);
+        rm.setHalfCarryFlag(false);
+        rm.setCarryFlag(false);
+
+    }
 
 }

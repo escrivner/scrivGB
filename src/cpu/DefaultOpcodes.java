@@ -958,6 +958,152 @@ public class DefaultOpcodes extends CPUMethods{
                 cpu.addOperationCycles(1);
                 break;
 
+            case(0x98):
+                opcodeSBC(B);
+                cpu.addOperationCycles(1);
+                break;
+
+            case(0x99):
+                opcodeSBC(C);
+                cpu.addOperationCycles(1);
+                break;
+
+            case(0x9A):
+                opcodeSBC(D);
+                cpu.addOperationCycles(1);
+                break;
+
+            case(0x9B):
+                opcodeSBC(E);
+                cpu.addOperationCycles(1);
+                break;
+
+            case(0x9C):
+                opcodeSBC(H);
+                cpu.addOperationCycles(1);
+                break;
+
+            case(0x9D):
+                opcodeSBC(L);
+                cpu.addOperationCycles(1);
+                break;
+
+            case(0x9E):
+                a = rm.readRegister(A);
+                b = rm.readRegister(HL);
+                c = bus.read(b);
+                d = rm.readCarryFlagValue();
+                rm.writeRegister(A, a - c - d);
+                rm.setSubtractionFlag(true);
+                checkForZero(A);
+                checkDecrementHalfCarry8(a, c, d);
+                checkDecrementCarry8(a, c, d);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0x9F):
+                opcodeSBC(A);
+                cpu.addOperationCycles(1);
+                break;
+
+            case(0xA0):
+                opcodeAND(B);
+                cpu.addOperationCycles(1);
+                break;
+
+            case(0xA1):
+                opcodeAND(C);
+                cpu.addOperationCycles(1);
+                break;
+
+            case(0xA2):
+                opcodeAND(D);
+                cpu.addOperationCycles(1);
+                break;
+
+            case(0xA3):
+                opcodeAND(E);
+                cpu.addOperationCycles(1);
+                break;
+
+            case(0xA4):
+                opcodeAND(H);
+                cpu.addOperationCycles(1);
+                break;
+
+            case(0xA5):
+                opcodeAND(L);
+                cpu.addOperationCycles(1);
+                break;
+
+            case(0xA6):
+                a = rm.readRegister(A);
+                b = rm.readRegister(HL);
+                c = bus.read(b);
+                rm.writeRegister(A, (a & c));
+                checkForZero(A);
+                rm.setSubtractionFlag(false);
+                rm.setHalfCarryFlag(true);
+                rm.setCarryFlag(false);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0xA7):
+                opcodeAND(A);
+                cpu.addOperationCycles(1);
+                break;
+
+            case(0xA8):
+                opcodeXOR(B);
+                cpu.addOperationCycles(1);
+                break;
+
+            case(0xA9):
+                opcodeXOR(C);
+                cpu.addOperationCycles(1);
+                break;
+
+            case(0xAA):
+                opcodeXOR(D);
+                cpu.addOperationCycles(1);
+                break;
+
+            case(0xAB):
+                opcodeXOR(E);
+                cpu.addOperationCycles(1);
+                break;
+
+            case(0xAC):
+                opcodeXOR(H);
+                cpu.addOperationCycles(1);
+                break;
+
+            case(0xAD):
+                opcodeXOR(L);
+                cpu.addOperationCycles(1);
+                break;
+
+            case(0xAE):
+                a = rm.readRegister(A);
+                b = rm.readRegister(HL);
+                c = bus.read(b);
+                rm.writeRegister(A, (a ^ c));
+                checkForZero(A);
+                rm.setSubtractionFlag(false);
+                rm.setHalfCarryFlag(false);
+                rm.setCarryFlag(false);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0xAF):
+                opcodeXOR(A);
+                cpu.addOperationCycles(2);
+                break;
+
+
+
+
+
 
 
 
