@@ -637,10 +637,99 @@ public class DefaultOpcodes extends CPUMethods{
                 cpu.addOperationCycles(1);
                 break;
                 
+            case(0x60):
+                opcodeLD(H, B);
+                cpu.addOperationCycles(1);
+                break;
+                
+            case(0x61):
+                opcodeLD(H, C);
+                cpu.addOperationCycles(1);
+                break;
+                
+            case(0x62):
+                opcodeLD(H, D);
+                cpu.addOperationCycles(1);
+                break;
+                
+            case(0x63):
+                opcodeLD(H, E);
+                cpu.addOperationCycles(1);
+                break;
+                
+            case(0x64):
+                opcodeLD(H, H);
+                cpu.addOperationCycles(1);
+                break;
+
+            case(0x65):
+                opcodeLD(H, L);
+                cpu.addOperationCycles(1);
+                break;
+
+            case(0x66):
+                a = rm.readRegister(HL);
+                b = bus.read(a);
+                rm.writeRegister(H, b);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0x67):
+                opcodeLD(H, A);
+                cpu.addOperationCycles(1);
+                break;
+                
+            case(0x68):
+                opcodeLD(L, B);
+                cpu.addOperationCycles(1);
+                break;
+             
+            case(0x69):
+                opcodeLD(L, C);
+                cpu.addOperationCycles(1);
+                break;
+
+            case(0x6A):
+                opcodeLD(L, D);
+                cpu.addOperationCycles(1);
+                break;
+             
+            case(0x6B):
+                opcodeLD(L, E);
+                cpu.addOperationCycles(1);
+                break;
+
+            case(0x6C):
+                opcodeLD(L, H);
+                cpu.addOperationCycles(1);
+                break;
+
+            case(0x6D):
+                opcodeLD(L, L);
+                cpu.addOperationCycles(1);
+                break;
+
+            case(0x6E):
+                a = rm.readRegister(HL);
+                b = bus.read(a);
+                rm.writeRegister(L, b);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0x6F):
+                opcodeLD(L, A);
+                cpu.addOperationCycles(1);
+                break;
+             
+             
+             
+             
+             
                 
                 
                 
                 
+
                 
                 
                 
