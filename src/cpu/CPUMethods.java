@@ -262,6 +262,16 @@ public class CPUMethods {
         checkIncrementCarry8(writeValue, readValue, carryValue);
     }
 
+    public void opcodeSUB(int register){
+        int accValue = rm.readRegister(A);
+        int regValue = rm.readRegister(register);
+        rm.writeRegister(A, accValue - regValue);
+        rm.setSubtractionFlag(true);
+        checkForZero(A);
+        checkDecrementHalfCarry8(accValue, regValue, 0);
+        checkDecrementCarry8(accValue, regValue, 0);
+    }
+
 
 
 }

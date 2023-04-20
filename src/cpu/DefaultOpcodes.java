@@ -726,46 +726,54 @@ public class DefaultOpcodes extends CPUMethods{
                 b = rm.readRegister(HL);
                 bus.write(a, b);
                 cpu.addOperationCycles(2);
-             
+                break;
+                
             case(0x71):
                 a = rm.readRegister(C);
                 b = rm.readRegister(HL);
                 bus.write(a, b);
                 cpu.addOperationCycles(2);
-
+                break;
+                
             case(0x72):
                 a = rm.readRegister(D);
                 b = rm.readRegister(HL);
                 bus.write(a, b);
                 cpu.addOperationCycles(2);
-
+                break;
+                
             case(0x73):
                 a = rm.readRegister(E);
                 b = rm.readRegister(HL);
                 bus.write(a, b);
                 cpu.addOperationCycles(2);
-
+                break;
+                
             case(0x74):
                 a = rm.readRegister(H);
                 b = rm.readRegister(HL);
                 bus.write(a, b);
                 cpu.addOperationCycles(2);
-
+                break;
+                
             case(0x75):
                 a = rm.readRegister(L);
                 b = rm.readRegister(HL);
                 bus.write(a, b);
                 cpu.addOperationCycles(2);
+                break;
 
             case(0x76):
                 cpu.halt();
                 cpu.addOperationCycles(1);
+                break;
 
             case(0x77):
                 a = rm.readRegister(A);
                 b = rm.readRegister(HL);
                 bus.write(a, b);
                 cpu.addOperationCycles(2);
+                break;
 
             case(0x78):
                 opcodeLD(A, B);
@@ -903,6 +911,57 @@ public class DefaultOpcodes extends CPUMethods{
                 opcodeADC(A, A);
                 cpu.addOperationCycles(1);
                 break;
+
+            case(0x90):
+                opcodeSUB(B);
+                cpu.addOperationCycles(1);
+                break;
+
+            case(0x91):
+                opcodeSUB(C);
+                cpu.addOperationCycles(1);
+                break;
+
+            case(0x92):
+                opcodeSUB(D);
+                cpu.addOperationCycles(1);
+                break;
+
+            case(0x93):
+                opcodeSUB(E);
+                cpu.addOperationCycles(1);
+                break;
+
+            case(0x94):
+                opcodeSUB(H);
+                cpu.addOperationCycles(1);
+                break;
+
+            case(0x95):
+                opcodeSUB(L);
+                cpu.addOperationCycles(1);
+                break;
+
+            case(0x96):
+                a = rm.readRegister(A);
+                b = bus.read(rm.readRegister(HL));
+                rm.writeRegister(A, a - b);
+                rm.setSubtractionFlag(true);
+                checkForZero(A);
+                checkDecrementHalfCarry8(a, b, 0);
+                checkDecrementCarry8(a, b, 0);
+                cpu.addOperationCycles(2);
+                break;
+                
+            case(0x97):
+                opcodeSUB(A);
+                cpu.addOperationCycles(1);
+                break;
+
+
+
+
+
 
 
 
