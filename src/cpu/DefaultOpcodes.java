@@ -233,6 +233,118 @@ public class DefaultOpcodes extends CPUMethods{
                 cpu.addOperationCycles(1);
                 break;
 
+            case(0x20):
+                //forces the value to be signed
+                a = (byte)cpu.fetch();
+
+                if(!rm.isZeroFlagSet()){
+                    b = rm.readRegister(PC);
+                    rm.writeRegister(PC, a + b);
+                    cpu.addOperationCycles(3);
+
+                } else {
+                    cpu.addOperationCycles(2);
+                }
+                break;
+
+            case(0x21):
+                a = cpu.fetch();
+                b = cpu.fetch();
+                c = bm.interpret16Bit(b, a);
+                rm.writeRegister(HL, c);
+                cpu.addOperationCycles(3);
+                break;
+
+            case(0x22):
+                a = rm.readRegister(A);
+                b = rm.readRegister(HL);
+                bus.write(a, b);
+                rm.writeRegister(HL, b+1);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0x23):
+                opcodeINCNoFlags(HL);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0x24):
+                opcodeINCFlags(H);
+                cpu.addOperationCycles(1);
+                break;
+
+            case(0x25):
+                opcodeDECFlags(H);
+                cpu.addOperationCycles(1);
+                break;
+
+            case(0x26):
+                a = cpu.fetch();
+                rm.writeRegister(H, a);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0x27):
+                System.out.println("opcode 0x27 DAA has not been implemented!!!");
+                break;
+
+            case(0x28):
+                //forces the value to be a signed byte.
+                a = (byte)cpu.fetch();
+
+                if(rm.isZeroFlagSet()){
+                    b = rm.readRegister(PC);
+                    rm.writeRegister(PC, a + b);
+                    cpu.addOperationCycles(3);
+
+                } else {
+                    cpu.addOperationCycles(2);
+                }
+                break;
+
+            case(0x29):
+                opcodeADD(HL, HL);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0x2A):
+                a = rm.readRegister(HL);
+                b = bus.read(a);
+                rm.writeRegister(A, b);
+                rm.writeRegister(HL, a+1);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0x2B):
+                opcodeDECNoFlags(HL);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0x2C):
+                opcodeINCFlags(L);
+                cpu.addOperationCycles(1);
+                break;
+
+            case(0x2D):
+                opcodeDECFlags(L);
+                cpu.addOperationCycles(1);
+                break;
+
+            case(0x2E):
+                a = cpu.fetch();
+                rm.writeRegister(L, a);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0x2F):
+                a = rm.readRegister(A);
+                b = ~a;
+                rm.writeRegister(A, b);
+                rm.setSubtractionFlag(true);
+                rm.setHalfCarryFlag(true);
+                cpu.addOperationCycles(1);
+                break;
+
         }
     }
 }
