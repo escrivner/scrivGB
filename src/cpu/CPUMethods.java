@@ -212,7 +212,8 @@ public class CPUMethods {
     public void opcodeRRC(int register){
         int value = rm.readRegister(register);
         value = rotateThroughCarry8(value, RIGHT);
-        rm.setZeroFlag(false);
+        rm.writeRegister(register, value);
+        checkForZero(register);
         rm.setSubtractionFlag(false);
         rm.setHalfCarryFlag(false);
     }
@@ -220,7 +221,8 @@ public class CPUMethods {
     public void opcodeRLC(int register){
         int value = rm.readRegister(register);
         value = rotateThroughCarry8(value, LEFT);
-        rm.setZeroFlag(false);
+        rm.writeRegister(register, value);
+        checkForZero(register);
         rm.setSubtractionFlag(false);
         rm.setHalfCarryFlag(false);
     }
@@ -228,7 +230,8 @@ public class CPUMethods {
     public void opcodeRR(int register){
         int value = rm.readRegister(register);
         value = rotatePreviousCarry8(value, RIGHT);
-        rm.setZeroFlag(false);
+        rm.writeRegister(register, value);
+        checkForZero(register);
         rm.setSubtractionFlag(false);
         rm.setHalfCarryFlag(false);
     }
@@ -236,7 +239,8 @@ public class CPUMethods {
     public void opcodeRL(int register){
         int value = rm.readRegister(register);
         value = rotatePreviousCarry8(value, LEFT);
-        rm.setZeroFlag(false);
+        rm.writeRegister(register, value);
+        checkForZero(register);
         rm.setSubtractionFlag(false);
         rm.setHalfCarryFlag(false);
     }

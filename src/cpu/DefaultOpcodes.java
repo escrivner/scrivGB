@@ -80,12 +80,12 @@ public class DefaultOpcodes extends CPUMethods{
                 break;
 
             case(0x07):
-                rm.setZeroFlag(false);
-                rm.setSubtractionFlag(false);
-                rm.setHalfCarryFlag(false);
                 a = rm.readRegister(A);
                 b = rotateThroughCarry8(a, LEFT);
                 rm.writeRegister(A, b);
+                rm.setZeroFlag(false);
+                rm.setSubtractionFlag(false);
+                rm.setHalfCarryFlag(false);
                 cpu.addOperationCycles(1);
                 break;
 
@@ -139,7 +139,12 @@ public class DefaultOpcodes extends CPUMethods{
                 break;
 
             case(0x0F):
-                opcodeRRC(A);
+                a = rm.readRegister(A);
+                b = rotateThroughCarry8(a, RIGHT);
+                rm.writeRegister(A, b);
+                rm.setZeroFlag(false);
+                rm.setSubtractionFlag(false);
+                rm.setHalfCarryFlag(false);
                 cpu.addOperationCycles(1);
                 break;
 
@@ -184,7 +189,12 @@ public class DefaultOpcodes extends CPUMethods{
                 break;
 
             case(0x17):
-                opcodeRL(A);
+                a = rm.readRegister(A);
+                b = rotatePreviousCarry8(a, LEFT);
+                rm.writeRegister(A, b);
+                rm.setZeroFlag(false);
+                rm.setSubtractionFlag(false);
+                rm.setHalfCarryFlag(false);
                 cpu.addOperationCycles(1);
                 break;
 
@@ -229,7 +239,12 @@ public class DefaultOpcodes extends CPUMethods{
                 break;
 
             case(0x1F):
-                opcodeRR(A);
+                a = rm.readRegister(A);
+                b = rotatePreviousCarry8(a, RIGHT);
+                rm.writeRegister(A, b);
+                rm.setZeroFlag(false);
+                rm.setSubtractionFlag(false);
+                rm.setHalfCarryFlag(false);
                 cpu.addOperationCycles(1);
                 break;
 
