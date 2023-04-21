@@ -303,7 +303,26 @@ public class CPUMethods {
         rm.setSubtractionFlag(false);
         rm.setHalfCarryFlag(false);
         rm.setCarryFlag(false);
+    }
 
+    public void opcodeOR(int register){
+        int accValue = rm.readRegister(A);
+        int regValue = rm.readRegister(register);
+        int or = accValue | regValue;
+        rm.writeRegister(A, or);
+        checkForZero(A);
+        rm.setSubtractionFlag(false);
+        rm.setHalfCarryFlag(false);
+        rm.setCarryFlag(false);
+    }
+
+    public void opcodeCP(int register){
+        int accValue = rm.readRegister(A);
+        int regValue = rm.readRegister(register);
+        rm.setZeroFlag((accValue - regValue) == 0);
+        rm.setSubtractionFlag(true);
+        checkDecrementHalfCarry8(accValue, regValue, 0);
+        checkDecrementCarry8(accValue, regValue, 0);
     }
 
 }

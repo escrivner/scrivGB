@@ -1100,6 +1100,112 @@ public class DefaultOpcodes extends CPUMethods{
                 cpu.addOperationCycles(2);
                 break;
 
+            case(0xB0):
+                opcodeOR(B);
+                cpu.addOperationCycles(1);
+                break;
+
+            case(0xB1):
+                opcodeOR(C);
+                cpu.addOperationCycles(1);
+                break;
+
+            case(0xB2):
+                opcodeOR(D);
+                cpu.addOperationCycles(1);
+                break;
+
+            case(0xB3):
+                opcodeOR(E);
+                cpu.addOperationCycles(1);
+                break;
+
+            case(0xB4):
+                opcodeOR(H);
+                cpu.addOperationCycles(1);
+                break;
+
+            case(0xB5):
+                opcodeOR(L);
+                cpu.addOperationCycles(1);
+                break;
+
+            case(0xB6):
+                a = rm.readRegister(A);
+                b = rm.readRegister(HL);
+                c = bus.read(b);
+                rm.writeRegister(A, (a | c));
+                checkForZero(A);
+                rm.setSubtractionFlag(false);
+                rm.setHalfCarryFlag(false);
+                rm.setCarryFlag(false);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0xB7):
+                opcodeOR(A);
+                cpu.addOperationCycles(1);
+                break;
+                
+            case(0xB8):
+                opcodeCP(B);
+                cpu.addOperationCycles(1);
+                break;
+
+            case(0xB9):
+                opcodeCP(C);
+                cpu.addOperationCycles(1);
+                break;
+
+            case(0xBA):
+                opcodeCP(D);
+                cpu.addOperationCycles(1);
+                break;
+
+            case(0xBB):
+                opcodeCP(E);
+                cpu.addOperationCycles(1);
+                break;
+
+            case(0xBC):
+                opcodeCP(H);
+                cpu.addOperationCycles(1);
+                break;
+
+            case(0xBD):
+                opcodeCP(L);
+                cpu.addOperationCycles(1);
+                break;
+
+            case(0xBE):
+                a = rm.readRegister(A);
+                b = rm.readRegister(HL);
+                c = bus.read(b);
+                rm.setZeroFlag((a-c) == 0);
+                rm.setSubtractionFlag(true);
+                checkDecrementHalfCarry8(a, c, 0);
+                checkDecrementCarry8(a, c, 0);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0xBF):
+                opcodeCP(A);
+                cpu.addOperationCycles(1);
+                break;
+
+            
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
