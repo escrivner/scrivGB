@@ -12,6 +12,7 @@ public class CPU extends CPUMethods{
     private BitManipulator bm;
     private RegisterManager rm;
     private DefaultOpcodes dCodes;
+    private PrefixOpcodes pCodes;
 
     private final int LEFT = 0;
     private final int RIGHT = 1;
@@ -24,6 +25,7 @@ public class CPU extends CPUMethods{
         this.aBus = aBus;
         bm = aBus.getBitManipulator();
         dCodes = new DefaultOpcodes(aBus, this, rm);
+        pCodes = new PrefixOpcodes(aBus, this, rm)
         rm.writeRegister(PC, 0x100);
     }
 
@@ -46,6 +48,8 @@ public class CPU extends CPUMethods{
             dCodes.execute(opcode);
 
         } else {
+            opcode = fetch();
+            pCodes.execute(opcode);
             
         }
         
