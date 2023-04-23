@@ -25,7 +25,7 @@ public class CPU extends CPUMethods{
         this.aBus = aBus;
         bm = aBus.getBitManipulator();
         dCodes = new DefaultOpcodes(aBus, this, rm);
-        pCodes = new PrefixOpcodes(aBus, this, rm)
+        pCodes = new PrefixOpcodes(aBus, this, rm);
         rm.writeRegister(PC, 0x100);
     }
 

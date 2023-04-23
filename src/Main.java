@@ -19,7 +19,6 @@ public class Main {
         bus = new Motherboard(args[0]);
         cartridge = bus.getCartridge();
         cpu = bus.getCPU();
-
         while(true){
             executeCPUCycle();
             TimeUnit.SECONDS.sleep(1);

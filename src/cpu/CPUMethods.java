@@ -178,6 +178,13 @@ public class CPUMethods {
         }
     }
 
+    public int swap(int value){
+        value = value & 0xFF;
+        int newHigh = (value & 0x0F) << 4;
+        int newLow = value >> 4;
+        return newHigh | newLow;
+    }
+
     public void opcodeLD(int writeRegister, int readRegister){
         int readValue = rm.readRegister(readRegister);
         rm.writeRegister(writeRegister, readValue);
@@ -328,5 +335,50 @@ public class CPUMethods {
         checkDecrementHalfCarry8(accValue, regValue, 0);
         checkDecrementCarry8(accValue, regValue, 0);
     }
+
+    public void opcodeSLA(int register){
+        int regValue = rm.readRegister(register);
+        int shiftValue = (regValue << 1) & 0xFF;
+        boolean carryValue = bm.isBitSet(regValue, 7);
+        rm.writeRegister(register, shiftValue);
+        checkForZero(register);
+        rm.setSubtractionFlag(false);
+        rm.setHalfCarryFlag(false);
+        rm.setCarryFlag(carryValue);
+    }
+
+    public void opcodeSRA(int register){
+        int regValue = rm.readRegister(register);
+        int shiftValue = (regValue >> 1) & 0xFF;
+        shiftValue = bm.setBit(bm.isBitSet(regValue, 7), shiftValue, 7);
+        boolean carryValue = bm.isBitSet(regValue, 0);
+        rm.writeRegister(register, shiftValue);
+        checkForZero(register);
+        rm.setSubtractionFlag(false);
+        rm.setHalfCarryFlag(false);
+        rm.setCarryFlag(carryValue);
+    }
+
+    public void opcodeSWAP(int register){
+        int regValue = rm.readRegister(register);
+        int swap = swap(regValue);
+        rm.writeRegister(register, swap);
+        checkForZero(register);
+        rm.setSubtractionFlag(false);
+        rm.setHalfCarryFlag(false);
+        rm.setCarryFlag(false);
+    }
+
+    public void opcodeSRL(int register){
+        int regValue = rm.readRegister(register);
+        int shift = (regValue >> 1) & 0xFF;
+        rm.writeRegister(register, shift);
+        checkForZero(register);
+        rm.setSubtractionFlag(false);
+        rm.setHalfCarryFlag(false);
+        rm.setCarryFlag(bm.isBitSet(regValue, 0));
+    }
+
+
 
 }
