@@ -211,8 +211,122 @@ public class PrefixOpcodes extends CPUMethods{
                 cpu.addOperationCycles(2);
                 break;
 
+            case(0x20):
+                opcodeSLA(B);
+                cpu.addOperationCycles(2);
+                break;
+ 
+            case(0x21):
+                opcodeSLA(C);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0x22):
+                opcodeSLA(D);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0x23):
+                opcodeSLA(E);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0x24):
+                opcodeSLA(H);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0x25):
+                opcodeSLA(L);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0x26):
+                a = rm.readRegister(HL);
+                b = bus.read(a);
+                c = (b << 1) & 0xFF;
+                boolean carryValue = bm.isBitSet(b, 7);
+                bus.write(c, a);
+                rm.setZeroFlag(c == 0);
+                rm.setSubtractionFlag(false);
+                rm.setHalfCarryFlag(false);
+                rm.setCarryFlag(carryValue);
+                cpu.addOperationCycles(4);
+                break;
+
+            case(0x27):
+                opcodeSLA(A);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0x28):
+                opcodeSRA(B);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0x29):
+                opcodeSRA(C);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0x2A):
+                opcodeSRA(D);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0x2B):
+                opcodeSRA(E);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0x2C):
+                opcodeSRA(H);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0x2D):
+                opcodeSRA(L);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0x2E):
+                a = rm.readRegister(HL);
+                b = bus.read(a);
+                c = (b >> 1) & 0xFF;
+                d = bm.setBit(bm.isBitSet(b, 7), c, 7);
+                bus.write(d, a);
+                rm.setZeroFlag(d == 0);
+                rm.setSubtractionFlag(false);
+                rm.setHalfCarryFlag(false);
+                rm.setCarryFlag(bm.isBitSet(b, 0));
+                cpu.addOperationCycles(4);
+                break;
+
+            case(0x2F):
+                opcodeSRA(A);
+                cpu.addOperationCycles(2);
+                break;
+                
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+ 
+ 
  
 
+
+ 
+ 
  
 
  
