@@ -379,6 +379,26 @@ public class CPUMethods {
         rm.setCarryFlag(bm.isBitSet(regValue, 0));
     }
 
+    public void opcodeBIT(int bit, int register){
+        int regValue = rm.readRegister(register);
+        boolean complement = !bm.isBitSet(regValue, bit);
+        rm.setZeroFlag(complement);
+        rm.setSubtractionFlag(false);
+        rm.setHalfCarryFlag(true);
+    }
+
+    public void opcodeRES(int bit, int register){
+        int regValue = rm.readRegister(register);
+        int resValue = bm.setBit(false, regValue, bit);
+        rm.writeRegister(register, resValue);
+    }
+
+    public void opcodeSET(int bit, int register){
+        int regValue = rm.readRegister(register);
+        int resValue = bm.setBit(true, regValue, bit);
+        rm.writeRegister(register, resValue);
+    }
+
 
 
 }
