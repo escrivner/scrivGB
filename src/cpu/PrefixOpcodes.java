@@ -111,7 +111,7 @@ public class PrefixOpcodes extends CPUMethods{
                 rm.setZeroFlag(c == 0);
                 rm.setSubtractionFlag(false);
                 rm.setHalfCarryFlag(false);
-                cpu.addOperationCycles(2);
+                cpu.addOperationCycles(4);
                 break;
 
             case(0x0F):
@@ -119,6 +119,112 @@ public class PrefixOpcodes extends CPUMethods{
                 cpu.addOperationCycles(2);
                 break;
 
+            case(0x10):
+                opcodeRL(B);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0x11):
+                opcodeRL(C);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0x12):
+                opcodeRL(D);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0x13):
+                opcodeRL(E);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0x14):
+                opcodeRL(H);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0x15):
+                opcodeRL(L);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0x16):
+                a = rm.readRegister(HL);
+                b = bus.read(a);
+                c = rotatePreviousCarry8(a, LEFT);
+                bus.write(c, a);
+                rm.setZeroFlag(c == 0);
+                rm.setSubtractionFlag(false);
+                rm.setHalfCarryFlag(false);
+                cpu.addOperationCycles(4);
+                break;
+
+            case(0x17):
+                opcodeRL(A);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0x18):
+                opcodeRR(B);
+                cpu.addOperationCycles(2);
+                break;
+ 
+            case(0x19):
+                opcodeRR(C);
+                cpu.addOperationCycles(2);
+                break;
+ 
+            case(0x1A):
+                opcodeRR(D);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0x1B):
+                opcodeRR(E);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0x1C):
+                opcodeRR(H);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0x1D):
+                opcodeRR(L);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0x1E):
+                a = rm.readRegister(HL);
+                b = bus.read(a);
+                c = rotatePreviousCarry8(b, RIGHT);
+                bus.write(c, a);
+                rm.setZeroFlag(c == 0);
+                rm.setSubtractionFlag(false);
+                rm.setHalfCarryFlag(false);
+                cpu.addOperationCycles(4);
+                break;
+
+            case(0x1F):
+                opcodeRR(A);
+                cpu.addOperationCycles(2);
+                break;
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+
+
+ 
+
+ 
  
 
  
