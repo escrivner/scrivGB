@@ -1016,6 +1016,118 @@ public class PrefixOpcodes extends CPUMethods{
                 cpu.addOperationCycles(2);
                 break;
 
+            case(0xB0):
+                opcodeRES(6, B);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0xB1):
+                opcodeRES(6, C);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0xB2):
+                opcodeRES(6, D);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0xB3):
+                opcodeRES(6, E);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0xB4):
+                opcodeRES(6, H);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0xB5):
+                opcodeRES(6, L);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0xB6):
+                a = rm.readRegister(HL);
+                b = bus.read(a);
+                c = bm.setBit(false, b, 6);
+                bus.write(c, a);
+                cpu.addOperationCycles(4);
+                break;
+ 
+            case(0xB7):
+                opcodeRES(6, A);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0xB8):
+                opcodeRES(7, B);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0xB9):
+                opcodeRES(7, C);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0xBA):
+                opcodeRES(7, D);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0xBB):
+                opcodeRES(7, E);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0xBC):
+                opcodeRES(7, H);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0xBD):
+                opcodeRES(7, L);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0xBE):
+                a = rm.readRegister(HL);
+                b = bus.read(a);
+                c = bm.setBit(false, b, 7);
+                bus.write(c, a);
+                cpu.addOperationCycles(4);
+                break;
+ 
+            case(0xBF):
+                opcodeRES(7, A);
+                cpu.addOperationCycles(2);
+                break;
+
+               
+
+               
+
+               
+
+               
+
+               
+
+               
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
