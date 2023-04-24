@@ -306,7 +306,118 @@ public class PrefixOpcodes extends CPUMethods{
                 opcodeSRA(A);
                 cpu.addOperationCycles(2);
                 break;
-                
+
+            case(0x30):
+                opcodeSWAP(B);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0x31):
+                opcodeSWAP(C);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0x32):
+                opcodeSWAP(D);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0x33):
+                opcodeSWAP(E);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0x34):
+                opcodeSWAP(H);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0x35):
+                opcodeSWAP(L);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0x36):
+                a = rm.readRegister(HL);
+                b = bus.read(a);
+                c = swap(b);
+                bus.write(c, a);
+                rm.setZeroFlag(c == 0);
+                rm.setSubtractionFlag(false);
+                rm.setHalfCarryFlag(false);
+                rm.setCarryFlag(false);
+                cpu.addOperationCycles(4);
+                break;
+
+            case(0x37):
+                opcodeSWAP(A);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0x38):
+                opcodeSRL(B);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0x39):
+                opcodeSRL(C);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0x3A):
+                opcodeSRL(D);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0x3B):
+                opcodeSRL(E);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0x3C):
+                opcodeSRL(H);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0x3D):
+                opcodeSRL(L);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0x3E):
+                a = rm.readRegister(HL);
+                b = bus.read(a);
+                c = (b >> 1) & 0xFF;
+                bus.write(c, a);
+                rm.setZeroFlag(c == 0);
+                rm.setSubtractionFlag(false);
+                rm.setHalfCarryFlag(false);
+                rm.setCarryFlag(bm.isBitSet(b, 0));
+                cpu.addOperationCycles(4);
+                break;
+
+            case(0x3F):
+                opcodeSRL(A);
+                cpu.addOperationCycles(2);
+                break;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   
 
