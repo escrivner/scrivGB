@@ -9,10 +9,13 @@ public class CPU extends CPUMethods{
     public static boolean isDebuggingModeActive = true;
     private Motherboard aBus;
     public int cycleCounter;
+    public int delayCounter;
     private BitManipulator bm;
     private RegisterManager rm;
     private DefaultOpcodes dCodes;
     private PrefixOpcodes pCodes;
+    private int prevOpcode;
+    private int currentOpcode;
 
     private final int LEFT = 0;
     private final int RIGHT = 1;
@@ -31,37 +34,36 @@ public class CPU extends CPUMethods{
 
     public void tick(){
 
-        if(cycleCounter > 0) { 
-            cycleCounter--;
-            return;
-        } else if(cycleCounter < 0){
-            cycleCounter = 0;
-        }
-
-        
         //if there is an interrupt, handles it and returns
         if(checkForInterrupts()){ return; }
 
-        int opcode = fetch();
+        if(cycleCounter <= 0){
+            prevOpcode = currentOpcode;
+            currentOpcode = fetch();
+        }
 
-        if(opcode != 0xCB){
-            dCodes.execute(opcode);
+        if(currentOpcode != 0xCB){
+            dCodes.execute(currentOpcode);
+
+        } else if(currentOpcode == 0xCB && prevOpcode != 0xCB){
+            prevOpcode = currentOpcode;
+            currentOpcode = fetch();
+            pCodes.execute(currentOpcode);
 
         } else {
-            opcode = fetch();
-            pCodes.execute(opcode);
-            
+            pCodes.execute(currentOpcode);
         }
         
         cycleCounter--;
-        printCPUState(opcode);
+        if(delayCounter > 0){ delayCounter--;}
+        //printCPUState(opcode);
         
     }
 
     public int fetch(){
 
-        int nextAddress = rm.readRegister(PC);
         increment(PC, 1);
+        int nextAddress = rm.readRegister(PC);
         int opcode = aBus.read(nextAddress);
         return opcode;
     }

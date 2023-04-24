@@ -23,6 +23,11 @@ public class DefaultOpcodes extends CPUMethods{
 
     public void execute(int opcode){
 
+        if(cpu.cycleCounter > 0){
+            
+            return;
+        }
+        
         int a = 0;
         int b = 0;
         int c = 0;

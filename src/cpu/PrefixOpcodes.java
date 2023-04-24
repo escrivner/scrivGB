@@ -20,6 +20,11 @@ public class PrefixOpcodes extends CPUMethods{
 
     public void execute(int opcode){
 
+        if(cpu.cycleCounter > 0){
+            
+            return;
+        }
+
         int a = 0;
         int b = 0;
         int c = 0;
@@ -577,7 +582,174 @@ public class PrefixOpcodes extends CPUMethods{
                 cpu.addOperationCycles(2);
                 break;
 
-                
+            case(0x60):
+                opcodeBIT(4, B);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0x61):
+                opcodeBIT(4, C);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0x62):
+                opcodeBIT(4, D);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0x63):
+                opcodeBIT(4, E);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0x64):
+                opcodeBIT(4, H);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0x65):
+                opcodeBIT(4, L);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0x66):
+                a = rm.readRegister(HL);
+                b = bus.read(a);
+                rm.setZeroFlag(!bm.isBitSet(b, 4));
+                rm.setSubtractionFlag(false);
+                rm.setHalfCarryFlag(true);
+                cpu.addOperationCycles(3);
+                break;
+
+            case(0x67):
+                opcodeBIT(4, A);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0x68):
+                opcodeBIT(5, B);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0x69):
+                opcodeBIT(5, C);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0x6A):
+                opcodeBIT(5, D);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0x6B):
+                opcodeBIT(5, E);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0x6C):
+                opcodeBIT(5, H);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0x6D):
+                opcodeBIT(5, L);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0x6E):
+                a = rm.readRegister(HL);
+                b = bus.read(a);
+                rm.setZeroFlag(!bm.isBitSet(b, 5));
+                rm.setSubtractionFlag(false);
+                rm.setHalfCarryFlag(true);
+                cpu.addOperationCycles(3);
+                break;
+
+            case(0x6F):
+                opcodeBIT(5, A);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0x70):
+                opcodeBIT(6, B);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0x71):
+                opcodeBIT(6, C);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0x72):
+                opcodeBIT(6, D);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0x73):
+                opcodeBIT(6, E);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0x74):
+                opcodeBIT(6, H);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0x75):
+                opcodeBIT(6, L);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0x76):
+                a = rm.readRegister(HL);
+                b = bus.read(a);
+                rm.setZeroFlag(!bm.isBitSet(b, 6));
+                rm.setSubtractionFlag(false);
+                rm.setHalfCarryFlag(true);
+                cpu.addOperationCycles(3);
+                break;
+
+            case(0x77):
+                opcodeBIT(6, A);
+                cpu.addOperationCycles(2);
+                break;
+
+            
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
