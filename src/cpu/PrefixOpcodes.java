@@ -401,6 +401,114 @@ public class PrefixOpcodes extends CPUMethods{
                 cpu.addOperationCycles(2);
                 break;
 
+            case(0x40):
+                opcodeBIT(0, B);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0x41):
+                opcodeBIT(0, C);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0x42):
+                opcodeBIT(0, D);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0x43):
+                opcodeBIT(0, E);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0x44):
+                opcodeBIT(0, H);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0x45):
+                opcodeBIT(0, L);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0x46):
+                a = rm.readRegister(HL);
+                b = bus.read(a);
+                rm.setZeroFlag(!bm.isBitSet(b, 0));
+                rm.setSubtractionFlag(false);
+                rm.setHalfCarryFlag(true);
+                cpu.addOperationCycles(3);
+                break;
+
+            case(0x47):
+                opcodeBIT(0, A);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0x48):
+                opcodeBIT(1, B);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0x49):
+                opcodeBIT(1, C);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0x4A):
+                opcodeBIT(1, D);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0x4B):
+                opcodeBIT(1, E);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0x4C):
+                opcodeBIT(1, H);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0x4D):
+                opcodeBIT(1, L);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0x4E):
+                a = rm.readRegister(HL);
+                b = bus.read(a);
+                rm.setZeroFlag(!bm.isBitSet(b, 1));
+                rm.setSubtractionFlag(false);
+                rm.setHalfCarryFlag(true);
+                cpu.addOperationCycles(3);
+                break;
+
+            case(0x4F):
+                opcodeBIT(1, A);
+                cpu.addOperationCycles(2);
+                break;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
