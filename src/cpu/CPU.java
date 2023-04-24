@@ -54,7 +54,7 @@ public class CPU extends CPUMethods{
             pCodes.execute(currentOpcode);
         }
         
-        cycleCounter--;
+        if(cycleCounter > 0){ cycleCounter--;}
         if(delayCounter > 0){ delayCounter--;}
         //printCPUState(opcode);
         

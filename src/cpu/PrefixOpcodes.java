@@ -21,7 +21,7 @@ public class PrefixOpcodes extends CPUMethods{
     public void execute(int opcode){
 
         if(cpu.cycleCounter > 0){
-            
+
             return;
         }
 
@@ -714,6 +714,169 @@ public class PrefixOpcodes extends CPUMethods{
                 cpu.addOperationCycles(2);
                 break;
 
+            case(0x78):
+                opcodeBIT(7, B);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0x79):
+                opcodeBIT(7, C);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0x7A):
+                opcodeBIT(7, D);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0x7B):
+                opcodeBIT(7, E);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0x7C):
+                opcodeBIT(7, H);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0x7D):
+                opcodeBIT(7, L);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0x7E):
+                a = rm.readRegister(HL);
+                b = bus.read(a);
+                rm.setZeroFlag(!bm.isBitSet(b, 7));
+                rm.setSubtractionFlag(false);
+                rm.setHalfCarryFlag(true);
+                cpu.addOperationCycles(3);
+                break;
+
+            case(0x7F):
+                opcodeBIT(7, A);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0x80):
+                opcodeRES(0, B);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0x81):
+                opcodeRES(0, C);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0x82):
+                opcodeRES(0, D);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0x83):
+                opcodeRES(0, E);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0x84):
+                opcodeRES(0, H);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0x85):
+                opcodeRES(0, L);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0x86):
+                a = rm.readRegister(HL);
+                b = bus.read(a);
+                c = bm.setBit(false, b, 0);
+                bus.write(c, a);
+                cpu.addOperationCycles(4);
+                break;
+
+            case(0x87):
+                opcodeRES(0, A);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0x88):
+                opcodeRES(1, B);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0x89):
+                opcodeRES(1, C);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0x8A):
+                opcodeRES(1, D);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0x8B):
+                opcodeRES(1, E);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0x8C):
+                opcodeRES(1, H);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0x8D):
+                opcodeRES(1, L);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0x8E):
+                a = rm.readRegister(HL);
+                b = bus.read(a);
+                c = bm.setBit(false, b, 1);
+                bus.write(c, a);
+                cpu.addOperationCycles(4);
+                break;
+
+            case(0x8F):
+                opcodeRES(1, A);
+                cpu.addOperationCycles(2);
+                break;
+
+      
+
+
+
+
+
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
             
 
  
