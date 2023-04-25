@@ -39,6 +39,18 @@ public class RegisterManager {
         sp = new Register();
         pc = new Register();
         bm = new BitManipulator();
+
+        //initial values
+        writeRegister(A, 0x01);
+        writeRegister(F, 0xB0);
+        writeRegister(B, 0x00);
+        writeRegister(C, 0x13);
+        writeRegister(D, 0x00);
+        writeRegister(E, 0xD8);
+        writeRegister(H, 0x01);
+        writeRegister(L, 0x4D);
+        writeRegister(SP, 0xFFFE);
+        writeRegister(PC, 0x0100);
     }
 
     public int readRegister(int register){

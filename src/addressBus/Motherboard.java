@@ -49,7 +49,7 @@ public class Motherboard{
             RAM.write(value, ramAddress);
 
         } else {
-            System.out.println("Attempted to write out of bounds memory address!!!");
+            System.out.println("Attempted to write out of bounds memory address!!! " + address);
 
         }
     }
@@ -62,7 +62,11 @@ public class Motherboard{
         } else if(address == INTERRUPT_ENABLED_REGISTER){
             return iRegisters.readInterruptEnabledFlags();
 
-        } else if(address < 0x8000){
+        } else if(address == 0xFF44){
+            //LCD LY register hardcoded for gameboy doctor
+            return 0x90;
+
+        }else if(address < 0x8000){
             return cartridge.read(address);
 
         } else if(address < 0xFFFF+1){
