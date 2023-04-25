@@ -1274,282 +1274,180 @@ public class PrefixOpcodes extends CPUMethods{
                 cpu.addOperationCycles(2);
                 break;
 
-            
-           
-           
-           
-           
-           
-           
-
-
-            
-
-            
-
-            
-
-            
-
-            
-
-            
-
-            
-            
-
- 
-
- 
-
- 
-
- 
-
- 
-
- 
-               
-
-               
-
-               
-
-               
-
-               
-
-               
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      
-      
-      
-      
-      
-
-
-
-
-
-
- 
-
- 
-
- 
-
- 
-
- 
-
- 
-
- 
-
- 
- 
-
- 
-
- 
-
- 
-
- 
-
- 
-            
-
- 
-
- 
-
- 
-
- 
-
- 
- 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
- 
- 
- 
-
-
- 
- 
- 
-
- 
-
- 
-
- 
-
-
-
- 
-
- 
- 
-
- 
-
- 
-
- 
-
-             
-
-             
-             
-             
+            case(0xE0):
+                opcodeSET(4, B);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0xE1):
+                opcodeSET(4, C);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0xE2):
+                opcodeSET(4, D);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0xE3):
+                opcodeSET(4, E);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0xE4):
+                opcodeSET(4, H);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0xE5):
+                opcodeSET(4, L);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0xE6):
+                a = rm.readRegister(HL);
+                b = bus.read(a);
+                c = bm.setBit(true, b, 4);
+                bus.write(c, a);
+                cpu.addOperationCycles(4);
+                break;
+
+            case(0xE7):
+                opcodeSET(4, A);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0xE8):
+                opcodeSET(5, B);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0xE9):
+                opcodeSET(5, C);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0xEA):
+                opcodeSET(5, D);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0xEB):
+                opcodeSET(5, E);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0xEC):
+                opcodeSET(5, H);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0xED):
+                opcodeSET(5, L);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0xEE):
+                a = rm.readRegister(HL);
+                b = bus.read(a);
+                c = bm.setBit(true, b, 5);
+                bus.write(c, a);
+                cpu.addOperationCycles(4);
+                break;
+
+            case(0xEF):
+                opcodeSET(5, A);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0xF0):
+                opcodeSET(6, B);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0xF1):
+                opcodeSET(6, C);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0xF2):
+                opcodeSET(6, D);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0xF3):
+                opcodeSET(6, E);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0xF4):
+                opcodeSET(6, H);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0xF5):
+                opcodeSET(6, L);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0xF6):
+                a = rm.readRegister(HL);
+                b = bus.read(a);
+                c = bm.setBit(true, b, 6);
+                bus.write(c, a);
+                cpu.addOperationCycles(4);
+                break;
+
+            case(0xF7):
+                opcodeSET(6, A);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0xF8):
+                opcodeSET(7, B);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0xF9):
+                opcodeSET(7, C);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0xFA):
+                opcodeSET(7, D);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0xFB):
+                opcodeSET(7, E);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0xFC):
+                opcodeSET(7, H);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0xFD):
+                opcodeSET(7, L);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0xFE):
+                a = rm.readRegister(HL);
+                b = bus.read(a);
+                c = bm.setBit(true, b, 7);
+                bus.write(c, a);
+                cpu.addOperationCycles(4);
+                break;
+
+            case(0xFF):
+                opcodeSET(7, A);
+                cpu.addOperationCycles(2);
+                break;
+
+            default:
+                System.out.println("Invalid prefix opcode executed!!!");
         }
     }
     
