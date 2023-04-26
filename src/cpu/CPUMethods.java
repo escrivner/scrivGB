@@ -21,6 +21,8 @@ public class CPUMethods {
     final static int HL = 13;
     final static int SP = 14;
     final static int PC = 15;
+    final static int PC_P = 16;
+    final static int PC_C = 17;
     final static int LEFT = 20;
     final static int RIGHT = 21;
 
@@ -398,6 +400,37 @@ public class CPUMethods {
         int resValue = bm.setBit(true, regValue, bit);
         rm.writeRegister(register, resValue);
     }
+
+    public void opcodePOP(int register){
+        int lowerAddress = rm.readRegister(SP);
+        int lowerValue = bus.read(lowerAddress);
+        rm.writeRegister(SP, lowerAddress+1);
+        int higherAddress = rm.readRegister(SP);
+        int higherValue = bus.read(higherAddress);
+        rm.writeRegister(SP, higherAddress+1);
+        int poppedValue = bm.interpret16Bit(higherValue, lowerValue);
+        rm.writeRegister(register, poppedValue);
+    }
+
+    public void opcodePUSH(int higherRegister, int lowerRegister){
+        rm.writeRegister(SP, rm.readRegister(SP)-1);
+        int higherAddress = rm.readRegister(SP);
+        rm.writeRegister(SP, rm.readRegister(SP)-1);
+        int lowerAddress = rm.readRegister(SP);
+        bus.write(higherAddress, rm.readRegister(higherRegister));
+        bus.write(lowerAddress, rm.readRegister(lowerRegister)); 
+    }
+
+    public void opcodeCALL(int value){
+        opcodePUSH(PC_P, PC_C);
+        rm.writeRegister(PC, value);
+    }
+
+    public void opcodeRST(int value){
+        opcodePUSH(rm.readRegister(PC_P), rm.readRegister(PC_C));
+        rm.writeRegister(PC, value);
+    }
+
 
 
 

@@ -62,9 +62,9 @@ public class CPU extends CPUMethods{
 
     public int fetch(){
 
-        increment(PC, 1);
         int nextAddress = rm.readRegister(PC);
         int opcode = aBus.read(nextAddress);
+        increment(PC, 1);
         return opcode;
     }
 

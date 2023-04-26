@@ -20,6 +20,8 @@ public class RegisterManager {
     final static int HL = 13;
     final static int SP = 14;
     final static int PC = 15;
+    final static int PC_P = 16;
+    final static int PC_C = 17;
     final static int LEFT = 20;
     final static int RIGHT = 21;
 
@@ -104,6 +106,12 @@ public class RegisterManager {
             case(PC):
                 return pc.getRegisterPair() & 0xFFFF;
 
+            case(PC_P):
+                return pc.getFirstRegister() & 0xFF;
+
+            case(PC_C):
+                return pc.getSecondRegister() & 0xFF;
+
             default:
                 System.out.println("CPUMethods: Invalid register read!!!");
                 return -1;
@@ -177,6 +185,13 @@ public class RegisterManager {
                 pc.setRegisterPair(value & 0xFFFF);
                 break;
 
+            case(PC_P):
+                pc.setFirstRegister(value & 0xFF);
+                break;
+
+            case(PC_C):
+                pc.setSecondRegister(value & 0xFF);
+                break;
             default:
                 System.out.println("CPUMethods: Invalid register write!!!");
         }

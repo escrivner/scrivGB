@@ -1213,6 +1213,149 @@ public class DefaultOpcodes extends CPUMethods{
                 cpu.addOperationCycles(1);
                 break;
 
+            case(0xC0):
+                if(!rm.isZeroFlagSet()){
+                    opcodePOP(PC);
+                    cpu.addOperationCycles(5);
+
+                } else {
+                    cpu.addOperationCycles(2);
+                }
+                break;
+
+            case(0xC1):
+                opcodePOP(BC);
+                cpu.addOperationCycles(3);
+                break;
+
+            case(0xC2):
+                a = cpu.fetch();
+                b = cpu.fetch();
+                if(!rm.isZeroFlagSet()){
+                    c = bm.interpret16Bit(b, a);
+                    rm.writeRegister(PC, c);
+                    cpu.addOperationCycles(4);
+                } else {
+                    cpu.addOperationCycles(3);
+                }
+                break;
+
+            case(0xC3):
+                a = cpu.fetch();
+                b = cpu.fetch();
+                c = bm.interpret16Bit(b, a);
+                rm.writeRegister(PC, c);
+                cpu.addOperationCycles(4);
+                break;
+
+            case(0xC4):
+                a = cpu.fetch();
+                b = cpu.fetch();
+                if(!rm.isZeroFlagSet()){
+                    c = bm.interpret16Bit(b, a);
+                    opcodeCALL(c);
+                    cpu.addOperationCycles(6);
+                    break;
+                } else {
+                    cpu.addOperationCycles(3);
+                    break;
+                }
+
+            case(0xC5):
+                opcodePUSH(rm.readRegister(B), rm.readRegister(C));
+                cpu.addOperationCycles(4);
+                break;
+
+            case(0xC6):
+                a = cpu.fetch();
+                b = rm.readRegister(A);
+                rm.writeRegister(A, a+b);
+                checkForZero(A);
+                rm.setSubtractionFlag(false);
+                checkIncrementHalfCarry8(a, b, 0);
+                checkIncrementCarry8(a, b, 0);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0xC7):
+                opcodeRST(0x00);
+                cpu.addOperationCycles(4);
+                break;
+
+            case(0xC8):
+                if(rm.isZeroFlagSet()){
+                    opcodePOP(PC);
+                    cpu.addOperationCycles(5);
+                    break;
+
+                } else {
+                    cpu.addOperationCycles(2);
+                    break;
+                }
+
+            case(0xC9):
+                opcodePOP(PC);
+                cpu.addOperationCycles(4);
+                break;
+
+            case(0xCA):
+                a = cpu.fetch();
+                b = cpu.fetch();
+                if(rm.isZeroFlagSet()){
+                    c = bm.interpret16Bit(b, a);
+                    rm.writeRegister(PC, c);
+                    cpu.addOperationCycles(4);
+        
+                }else {
+                    cpu.addOperationCycles(3);
+
+                }
+
+                break;
+
+            case(0xCB):
+                System.out.println("0xCB is a nonvalid default opcode!!!");
+                break;
+
+            case(0xCC):
+                a = cpu.fetch();
+                b = cpu.fetch();
+                if(rm.isZeroFlagSet()){
+                    c = bm.interpret16Bit(b, a);
+                    opcodeCALL(c);
+                    cpu.addOperationCycles(6);
+
+                } else {
+                    cpu.addOperationCycles(3);
+                }
+                break;
+
+            case(0xCD):
+                a = cpu.fetch();
+                b = cpu.fetch();
+                c = bm.interpret16Bit(b, a);
+                opcodeCALL(c);
+                cpu.addOperationCycles(6);
+                break;
+
+            case(0xCE):
+                a = cpu.fetch();
+                b = rm.readRegister(A);
+                c = rm.readCarryFlagValue();
+                rm.writeRegister(A, a+b+c);
+                checkForZero(A);
+                rm.setSubtractionFlag(false);
+                checkIncrementHalfCarry8(a, b, c);
+                checkIncrementCarry8(a, b, c);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0xCF):
+                opcodeRST(0x08);
+                cpu.addOperationCycles(4);
+                break;
+                
+
             
 
 
