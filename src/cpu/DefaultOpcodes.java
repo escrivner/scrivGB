@@ -1580,60 +1580,97 @@ public class DefaultOpcodes extends CPUMethods{
                 cpu.addOperationCycles(4);
                 break;
 
-                
-                
+            case(0xF0):
+                a = cpu.fetch();
+                b = bm.interpret16Bit(0xFF, a);
+                rm.writeRegister(A, bus.read(b));
+                cpu.addOperationCycles(3);
+                break;
 
+            case(0xF1):
+                opcodePOP(AF);
+                cpu.addOperationCycles(3);
+                break;
+
+            case(0xF2):
+                a = bm.interpret16Bit(0xFF, rm.readRegister(C));
+                rm.writeRegister(A, bus.read(a));
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0xF3):
+                bus.getInterruptRegisters().disableInterrupts();
+                cpu.addOperationCycles(1);
+                break;
+
+            case(0xF5):
+                opcodePUSH(rm.readRegister(A), rm.readRegister(F));
+                cpu.addOperationCycles(4);
+                break;
+
+            case(0xF6):
+                a = rm.readRegister(A);
+                b = cpu.fetch();
+                c = a | b;
+                rm.writeRegister(A, c);
+                checkForZero(A);
+                rm.setSubtractionFlag(false);
+                rm.setHalfCarryFlag(false);
+                rm.setCarryFlag(false);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0xF7):
+                opcodeRST(0x30);
+                cpu.addOperationCycles(4);
+                break;
+
+            case(0xF8):
+                a = (byte) cpu.fetch();
+                b = rm.readRegister(SP);
+                rm.writeRegister(HL, a+b);
+                rm.setZeroFlag(false);
+                rm.setSubtractionFlag(false);
+                checkIncrementHalfCarry16(a, b, 0);
+                checkIncrementCarry16(a, b, 0);
+                cpu.addOperationCycles(3);
+                break;
+
+            case(0xF9):
+                opcodeLD(SP, HL);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0xFA):
+                a = cpu.fetch();
+                b = cpu.fetch();
+                c = bm.interpret16Bit(b, a);
+                rm.writeRegister(A, bus.read(c));
+                cpu.addOperationCycles(4);
+                break;
+
+            case(0xFB):
+                bus.getInterruptRegisters().enableInterrupts();
+                cpu.addOperationCycles(1);
+                break;
+
+            case(0xFE):
+                a = rm.readRegister(A);
+                b = cpu.fetch();
+                rm.setZeroFlag((a-b) == 0);
+                rm.setSubtractionFlag(true);
+                checkDecrementHalfCarry8(a, b,0);
+                checkDecrementCarry8(a, b, 0);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0xFF):
+                opcodeRST(0x38);
+                cpu.addOperationCycles(4);
+                break;
             
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-            
-            
-             
-             
-             
-             
-             
-             
-                
-                
-                
-                
-
-                
-                
-                
-                
-                
-
-                
-                
-                
-                
-                
-                
-                
-                
+            default:
+                System.out.println("Illegal opcode " + Integer.toHexString(opcode));
         }
     }
 }
