@@ -1354,6 +1354,139 @@ public class DefaultOpcodes extends CPUMethods{
                 opcodeRST(0x08);
                 cpu.addOperationCycles(4);
                 break;
+
+            case(0xD0):
+                if(!rm.isCarryFlagSet()){
+                    opcodePOP(PC);
+                    cpu.addOperationCycles(5);
+
+                } else {
+                    cpu.addOperationCycles(2);
+                }
+
+                break;
+
+            case(0xD1):
+                opcodePOP(DE);
+                cpu.addOperationCycles(3);
+                break;
+
+            case(0xD2):
+                a = cpu.fetch();
+                b = cpu.fetch();
+                if(!rm.isCarryFlagSet()){
+                    c = bm.interpret16Bit(b, a);
+                    rm.writeRegister(PC, c);
+                    cpu.addOperationCycles(4);
+
+                } else {
+                    cpu.addOperationCycles(3);
+                }
+
+                break;
+
+            case(0xD3):
+                System.out.println("Invalid default opcode 0xD3!!!");
+                break;
+
+            case(0xD4):
+                a = cpu.fetch();
+                b = cpu.fetch();
+                if(!rm.isCarryFlagSet()){
+                    c = bm.interpret16Bit(b, a);
+                    opcodeCALL(c);
+                    cpu.addOperationCycles(6);
+
+                } else {
+                    cpu.addOperationCycles(3);
+                }
+                break;
+
+            case(0xD5):
+                opcodePUSH(rm.readRegister(D), rm.readRegister(E));
+                cpu.addOperationCycles(4);
+                break;
+
+            case(0xD6):
+                a = cpu.fetch();
+                b = rm.readRegister(A);
+                rm.writeRegister(A, b-a);
+                checkForZero(A);
+                rm.setSubtractionFlag(false);
+                checkDecrementHalfCarry8(b, a, 0);
+                checkDecrementCarry8(b, a, 0);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0xD7):
+                opcodeRST(0x10);
+                cpu.addOperationCycles(4);
+                break;
+
+            case(0xD8):
+                if(rm.isCarryFlagSet()){
+                    opcodePOP(PC);
+                    cpu.addOperationCycles(5);
+                } else {
+                    cpu.addOperationCycles(2);
+                }
+                break;
+
+            case(0xD9):
+                opcodePOP(PC);
+                bus.getInterruptRegisters().enableInterrupts();
+                cpu.addOperationCycles(4);
+                break;
+
+            case(0xDA):
+                a = cpu.fetch();
+                b = cpu.fetch();
+                if(rm.isCarryFlagSet()){
+                    c = bm.interpret16Bit(b, a);
+                    rm.writeRegister(PC, c);
+                    cpu.addOperationCycles(4); 
+                } else {
+                    cpu.addOperationCycles(3);
+                }
+                break;
+
+            case(0xDB): 
+                System.out.println("Invalid default opcode 0xDB");
+                break;
+                
+            case(0xDC):
+                a = cpu.fetch();
+                b = cpu.fetch();
+                if(rm.isCarryFlagSet()){
+                    c = bm.interpret16Bit(b, a);
+                    opcodeCALL(c);
+                    cpu.addOperationCycles(6);
+                } else {
+                    cpu.addOperationCycles(3);
+                }
+                break;
+
+            case(0xDD):
+                System.out.println("Invalid default opcode 0xDD");
+                break;
+
+            case(0xDE):
+                a = cpu.fetch();
+                b = rm.readRegister(A);
+                c = rm.readCarryFlagValue();
+                rm.writeRegister(A, b-a-c);
+                checkForZero(A);
+                rm.setSubtractionFlag(true);
+                checkDecrementHalfCarry8(b, a, c);
+                checkDecrementCarry8(b, a, c);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0xDF):
+                opcodeRST(0x18);
+                cpu.addOperationCycles(4);
+                break;
+
                 
 
             
