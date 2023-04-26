@@ -1487,6 +1487,100 @@ public class DefaultOpcodes extends CPUMethods{
                 cpu.addOperationCycles(4);
                 break;
 
+            case(0xE0):
+                a = cpu.fetch();
+                b = bm.interpret16Bit(0xFF, a);
+                c = rm.readRegister(A);
+                bus.write(c, b);
+                cpu.addOperationCycles(3);
+                break;
+
+            case(0xE1):
+                opcodePOP(HL);
+                cpu.addOperationCycles(3);
+                break;
+
+            case(0xE2):
+                a = rm.readRegister(A);
+                b = rm.readRegister(C);
+                c = bm.interpret16Bit(0xFF, b);
+                bus.write(a, c);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0xE3):
+                System.out.println("invalid opcode 0xE3");
+                break;
+
+            case(0xE4):
+                System.out.println("invalid opcode 0xE4");
+                break;
+
+            case(0xE5):
+                opcodePUSH(rm.readRegister(H), rm.readRegister(L));
+                cpu.addOperationCycles(4);
+                break;
+
+            case(0xE6):
+                a = rm.readRegister(A);
+                b = cpu.fetch();
+                c = a & b;
+                rm.writeRegister(A, c);
+                checkForZero(A);
+                rm.setSubtractionFlag(false);
+                rm.setHalfCarryFlag(true);
+                rm.setCarryFlag(false);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0xE7): 
+                opcodeRST(0x20);
+                cpu.addOperationCycles(4);
+                break;
+
+            case(0xE8):
+                a = (byte) cpu.fetch();
+                b = rm.readRegister(SP);
+                rm.writeRegister(SP, a+b);
+                rm.setZeroFlag(false);
+                rm.setSubtractionFlag(false);
+                checkIncrementHalfCarry16(a, b, 0);
+                checkIncrementCarry16(a, b, 0);
+                cpu.addOperationCycles(4);
+                break;
+
+            case(0xE9):
+                a = rm.readRegister(HL);
+                rm.writeRegister(PC, a);
+                cpu.addOperationCycles(1);
+                break;
+
+            case(0xEA):
+                a = cpu.fetch();
+                b = cpu.fetch();
+                c = bm.interpret16Bit(b, a);
+                bus.write(rm.readRegister(A), c);
+                cpu.addOperationCycles(4);
+                break;
+
+            case(0xEE):
+                a = rm.readRegister(A);
+                b = cpu.fetch();
+                c = a ^ b;
+                rm.writeRegister(A, c);
+                checkForZero(A);
+                rm.setSubtractionFlag(false);
+                rm.setHalfCarryFlag(false);
+                rm.setCarryFlag(false);
+                cpu.addOperationCycles(2);
+                break;
+
+            case(0xEF):
+                opcodeRST(0x28);
+                cpu.addOperationCycles(4);
+                break;
+
+                
                 
 
             
