@@ -58,7 +58,7 @@ public class DefaultOpcodes extends CPUMethods{
 
             case(0x03):
                 a = rm.readRegister(BC) + 1;
-                rm.writeRegister(BC, 1);
+                rm.writeRegister(BC, a);
                 cpu.addOperationCycles(2);
                 break;
 
@@ -95,9 +95,11 @@ public class DefaultOpcodes extends CPUMethods{
                 break;
 
             case(0x08):
-                a = bm.interpret16Bit(cpu.fetch(), cpu.fetch());
-                bus.write(rm.readRegister(P), a);
-                bus.write(rm.readRegister(S), a + 1);
+                a = cpu.fetch();
+                b = cpu.fetch();
+                c = bm.interpret16Bit(b, a);
+                bus.write(rm.readRegister(P), c);
+                bus.write(rm.readRegister(S), c + 1);
                 cpu.addOperationCycles(5);
                 break;
 
@@ -204,14 +206,14 @@ public class DefaultOpcodes extends CPUMethods{
                 break;
 
             case(0x18):
-                a = rm.readRegister(PC);
-                b = cpu.fetch();
+                a = (byte) cpu.fetch();
+                b = rm.readRegister(PC);
                 rm.writeRegister(PC, a + b);
                 cpu.addOperationCycles(3);
                 break;
 
             case(0x19):
-                opcodeADD(HL, DE);
+                opcodeADD16(HL, DE);
                 cpu.addOperationCycles(2);
                 break;
 
@@ -261,7 +263,6 @@ public class DefaultOpcodes extends CPUMethods{
                     b = rm.readRegister(PC);
                     rm.writeRegister(PC, a + b);
                     cpu.addOperationCycles(3);
-
                 } else {
                     cpu.addOperationCycles(2);
                 }
@@ -323,7 +324,7 @@ public class DefaultOpcodes extends CPUMethods{
                 break;
 
             case(0x29):
-                opcodeADD(HL, HL);
+                opcodeADD16(HL, HL);
                 cpu.addOperationCycles(2);
                 break;
 
@@ -449,7 +450,7 @@ public class DefaultOpcodes extends CPUMethods{
                 break;
 
             case(0x39):
-                opcodeADD(HL, SP);
+                opcodeADD16(HL, SP);
                 cpu.addOperationCycles(2);
                 break;
 
@@ -522,7 +523,7 @@ public class DefaultOpcodes extends CPUMethods{
             case(0x46):
                 a = rm.readRegister(HL);
                 b = bus.read(a);
-                rm.writeRegister(B, a);
+                rm.writeRegister(B, b);
                 cpu.addOperationCycles(2);
                 break;
 
@@ -838,32 +839,32 @@ public class DefaultOpcodes extends CPUMethods{
                 break;
 
             case(0x80):
-                opcodeADD(A, B);
+                opcodeADD8(A, B);
                 cpu.addOperationCycles(1);
                 break;
              
             case(0x81):
-                opcodeADD(A, C);
+                opcodeADD8(A, C);
                 cpu.addOperationCycles(1);
                 break;
              
             case(0x82):
-                opcodeADD(A, D);
+                opcodeADD8(A, D);
                 cpu.addOperationCycles(1);
                 break;
 
             case(0x83):
-                opcodeADD(A, E);
+                opcodeADD8(A, E);
                 cpu.addOperationCycles(1);
                 break;
              
             case(0x84):
-                opcodeADD(A, H);
+                opcodeADD8(A, H);
                 cpu.addOperationCycles(1);
                 break;
              
             case(0x85):
-                opcodeADD(A, L);
+                opcodeADD8(A, L);
                 cpu.addOperationCycles(1);
                 break;
              
@@ -880,7 +881,7 @@ public class DefaultOpcodes extends CPUMethods{
                 break;
 
             case(0x87):
-                opcodeADD(A, A);
+                opcodeADD8(A, A);
                 cpu.addOperationCycles(1);
                 break;
             
@@ -1262,7 +1263,7 @@ public class DefaultOpcodes extends CPUMethods{
                 }
 
             case(0xC5):
-                opcodePUSH(rm.readRegister(B), rm.readRegister(C));
+                opcodePUSH(B, C);
                 cpu.addOperationCycles(4);
                 break;
 
@@ -1403,7 +1404,7 @@ public class DefaultOpcodes extends CPUMethods{
                 break;
 
             case(0xD5):
-                opcodePUSH(rm.readRegister(D), rm.readRegister(E));
+                opcodePUSH(D, E);
                 cpu.addOperationCycles(4);
                 break;
 
@@ -1412,7 +1413,7 @@ public class DefaultOpcodes extends CPUMethods{
                 b = rm.readRegister(A);
                 rm.writeRegister(A, b-a);
                 checkForZero(A);
-                rm.setSubtractionFlag(false);
+                rm.setSubtractionFlag(true);
                 checkDecrementHalfCarry8(b, a, 0);
                 checkDecrementCarry8(b, a, 0);
                 cpu.addOperationCycles(2);
@@ -1517,7 +1518,7 @@ public class DefaultOpcodes extends CPUMethods{
                 break;
 
             case(0xE5):
-                opcodePUSH(rm.readRegister(H), rm.readRegister(L));
+                opcodePUSH(H, L);
                 cpu.addOperationCycles(4);
                 break;
 
@@ -1604,7 +1605,7 @@ public class DefaultOpcodes extends CPUMethods{
                 break;
 
             case(0xF5):
-                opcodePUSH(rm.readRegister(A), rm.readRegister(F));
+                opcodePUSH(A, F);
                 cpu.addOperationCycles(4);
                 break;
 

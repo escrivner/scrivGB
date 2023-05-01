@@ -1,5 +1,8 @@
 package cpu;
 import addressBus.Motherboard;
+
+import java.io.FileWriter;
+
 import addressBus.InterruptRegisters;
 import other.BitManipulator;
 
@@ -14,8 +17,12 @@ public class CPU extends CPUMethods{
     private RegisterManager rm;
     private DefaultOpcodes dCodes;
     private PrefixOpcodes pCodes;
+    private int currentPC;
     private int prevOpcode;
     private int currentOpcode;
+    private int tickCounter;
+    private int lineCounter;
+    private FileWriter logWriter;
 
     private final int LEFT = 0;
     private final int RIGHT = 1;
@@ -30,14 +37,35 @@ public class CPU extends CPUMethods{
         dCodes = new DefaultOpcodes(aBus, this, rm);
         pCodes = new PrefixOpcodes(aBus, this, rm);
         rm.writeRegister(PC, 0x100);
+
+        try {
+            logWriter = new FileWriter("gb_log.txt");
+        } catch (Exception e) {
+            System.out.println("Could not create log file.");
+        }
     }
 
     public void tick(){
 
+        currentPC = rm.readRegister(PC);
+        
+        if(lineCounter > 7000000){
+            try {
+                logWriter.close();
+
+            } catch (Exception e) {
+                // TODO: handle exception
+            }
+            System.exit(0);
+        }
+        
+        
         //if there is an interrupt, handles it and returns
         if(checkForInterrupts()){ return; }
 
         if(cycleCounter <= 0){
+            printCPUState();
+            lineCounter++;
             prevOpcode = currentOpcode;
             currentOpcode = fetch();
         }
@@ -56,7 +84,8 @@ public class CPU extends CPUMethods{
         
         if(cycleCounter > 0){ cycleCounter--;}
         if(delayCounter > 0){ delayCounter--;}
-        //printCPUState(opcode);
+        tickCounter++;
+
         
     }
 
@@ -102,32 +131,49 @@ public class CPU extends CPUMethods{
         return true;
     }
 
-    private void printCPUState(int opcode){
+    public void printCPUState(){
 
-        System.out.println("OPCODE: \t" + opcode + "\n");
-        System.out.println("FLAGS:");
-        System.out.println("\tZero flag: \t" + rm.isZeroFlagSet());
-        System.out.println("\tSubtraction flag: \t" + rm.isSubtractionFlagSet());
-        System.out.println("\tHalf Carry flag: \t" + rm.isHalfCarryFlagSet());
-        System.out.println("\tFull Carry flag: \t" + rm.isCarryFlagSet() + "\n");
+        
+        String a = bm.formatToHex(rm.readRegister(A), 2);
+        String f = bm.formatToHex(rm.readRegister(F), 2);
+        String b = bm.formatToHex(rm.readRegister(B), 2);
+        String c = bm.formatToHex(rm.readRegister(C), 2);
+        String d = bm.formatToHex(rm.readRegister(D), 2);
+        String e = bm.formatToHex(rm.readRegister(E), 2);
+        String h = bm.formatToHex(rm.readRegister(H), 2);
+        String l = bm.formatToHex(rm.readRegister(L), 2);
+        String sp = bm.formatToHex(rm.readRegister(SP), 4);
+        String pc = bm.formatToHex(currentPC, 4);
 
-        System.out.println("REGISTERS:");
-        System.out.println("\tA Register: \t" + rm.readRegister(A));
+        int pos = rm.readRegister(PC);
+        String pc0 = bm.formatToHex(aBus.read(pos), 2);
+        String pc1 = bm.formatToHex(aBus.read(pos+1), 2);
+        String pc2 = bm.formatToHex(aBus.read(pos+2), 2);
+        String pc3 = bm.formatToHex(aBus.read(pos+3), 2);
 
-        System.out.println("\tBC Register: \t" + rm.readRegister(BC));
-        System.out.println("\t\tB -> \t" + rm.readRegister(B));
-        System.out.println("\t\tC -> \t" + rm.readRegister(C));
+        String opcode = "";
+        String stack = "";
+        //stack = bm.formatToHex(aBus.read(rm.readRegister(SP)), 2) + " " + bm.formatToHex(aBus.read(rm.readRegister(SP+1)), 2) + " ";
+        /*opcode = bm.formatToHex(currentOpcode, 2);
+        if(prevOpcode == 0xCB){
+            opcode = bm.formatToHex(prevOpcode, 2) + bm.formatToHex(currentOpcode, 2);
+        }*/
+        String msg = "A:"+a + " F:" + f + " B:" + b + " C:" + c +" D:" + d + " E:" + e + " H:" + h + " L:" + l + " SP:" + sp + " PC:" + pc + " PCMEM:" + pc0 + "," + pc1 + "," + pc2 + "," + pc3;
+        System.out.println(msg);
 
-        System.out.println("\tDE Register: \t" + rm.readRegister(DE));
-        System.out.println("\t\tD -> \t" + rm.readRegister(D));
-        System.out.println("\t\tE -> \t" + rm.readRegister(E));
+        try {
+            logWriter.write(msg + "\n");
+        } catch (Exception ex) {
+            System.out.println("Could not write to log file.");
+        }
+    }
 
-        System.out.println("\tHL Register: \t" + rm.readRegister(HL));
-        System.out.println("\t\tH -> \t" + rm.readRegister(H));
-        System.out.println("\t\tL -> \t" + rm.readRegister(L));
-
-        System.out.println("\tSP Register: \t" + rm.readRegister(SP));
-        System.out.println("\tPC Register: \t" + rm.readRegister(PC));
+    public void writeLog(String msg){
+        try{
+            logWriter.write("\t" + msg + "\n");
+        } catch(Exception e){
+            e.printStackTrace();
+        }
     }
 
     public void addOperationCycles(int cycles){

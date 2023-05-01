@@ -41,7 +41,11 @@ public class Motherboard{
         } else if(address == INTERRUPT_ENABLED_REGISTER){
             iRegisters.writeInterruptEnabledFlags(value);
 
-        } else if(address < 0x8000){
+        } else if(address == 0xFF00){
+            
+            char letter = (char) value;
+            System.out.print(letter);
+        }else if(address < 0x8000){
             System.out.println("Attempted to write to read-only ROM!!!");
 
         } else if(address < 0xFFFF+1) {

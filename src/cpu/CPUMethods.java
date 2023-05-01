@@ -254,12 +254,21 @@ public class CPUMethods {
         rm.setHalfCarryFlag(false);
     }
 
-    public void opcodeADD(int writeRegister, int readRegister){
+    public void opcodeADD8(int writeRegister, int readRegister){
         int readValue = rm.readRegister(readRegister);
         int writeValue = rm.readRegister(writeRegister);
         rm.writeRegister(writeRegister, writeValue + readValue);
-        rm.setSubtractionFlag(false);
         checkForZero(writeRegister);
+        rm.setSubtractionFlag(false);
+        checkIncrementHalfCarry8(readValue, writeValue, 0);
+        checkIncrementCarry8(readValue, writeValue, 0);
+    }
+
+    public void opcodeADD16(int writeRegister, int readRegister){
+        int readValue = rm.readRegister(readRegister);
+        int writeValue = rm.readRegister(writeRegister);
+        rm.writeRegister(writeRegister, readValue + writeValue);
+        rm.setSubtractionFlag(false);
         checkIncrementHalfCarry16(readValue, writeValue, 0);
         checkIncrementCarry16(readValue, writeValue, 0);
     }
@@ -402,23 +411,21 @@ public class CPUMethods {
     }
 
     public void opcodePOP(int register){
-        int lowerAddress = rm.readRegister(SP);
-        int lowerValue = bus.read(lowerAddress);
-        rm.writeRegister(SP, lowerAddress+1);
-        int higherAddress = rm.readRegister(SP);
-        int higherValue = bus.read(higherAddress);
-        rm.writeRegister(SP, higherAddress+1);
-        int poppedValue = bm.interpret16Bit(higherValue, lowerValue);
+        int sp = rm.readRegister(SP);
+        int lowBits = bus.read(sp);
+        int highBits = bus.read(sp+1);
+        rm.writeRegister(SP, sp+2);
+        int poppedValue = bm.interpret16Bit(highBits, lowBits);
         rm.writeRegister(register, poppedValue);
     }
 
     public void opcodePUSH(int higherRegister, int lowerRegister){
-        rm.writeRegister(SP, rm.readRegister(SP)-1);
-        int higherAddress = rm.readRegister(SP);
-        rm.writeRegister(SP, rm.readRegister(SP)-1);
-        int lowerAddress = rm.readRegister(SP);
-        bus.write(higherAddress, rm.readRegister(higherRegister));
-        bus.write(lowerAddress, rm.readRegister(lowerRegister)); 
+        int sp = rm.readRegister(SP);
+        int higherBits = rm.readRegister(higherRegister);
+        bus.write(higherBits, sp-1);
+        int lowerBits = rm.readRegister(lowerRegister);
+        bus.write(lowerBits, sp-2);
+        rm.writeRegister(SP, sp-2);
     }
 
     public void opcodeCALL(int value){

@@ -21,13 +21,13 @@ public class Main {
         cpu = bus.getCPU();
         while(true){
             executeCPUCycle();
-            TimeUnit.SECONDS.sleep(1);
+            //TimeUnit.MILLISECONDS.sleep(15);
         }
     }
 
     private static void executeCPUCycle(){
 
-        System.out.println("CPU Tick " + cpuTickCounter + "\tremainding ticks: " + cpu.cycleCounter);
+        
         cpu.tick();
         cpuTickCounter++;
     }

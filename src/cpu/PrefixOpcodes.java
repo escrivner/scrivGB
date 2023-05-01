@@ -1449,6 +1449,8 @@ public class PrefixOpcodes extends CPUMethods{
             default:
                 System.out.println("Invalid prefix opcode executed!!!");
         }
+
+        
     }
     
 }

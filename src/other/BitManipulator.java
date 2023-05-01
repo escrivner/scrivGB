@@ -29,8 +29,18 @@ public class BitManipulator {
     }
 
     public int interpret16Bit(int higher, int lower){
-        int pairValue = higher << 8;
-        pairValue = (pairValue | lower);
+        int highBits = (higher << 8) & 0xFF00;
+        int lowBits = lower & 0xFF;
+        int pairValue = (highBits | lowBits);
         return pairValue;
+    }
+
+    public String formatToHex(int value, int expectedLength){
+        String hex = Integer.toHexString(value).toUpperCase();
+        int lengthDif = expectedLength - hex.length();
+        for(int i = 0; i < lengthDif; i++){
+            hex = "0" + hex;
+        }
+        return hex;
     }
 }

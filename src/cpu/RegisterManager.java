@@ -62,7 +62,7 @@ public class RegisterManager {
                 return af.getFirstRegister() & 0xFF;
                 
             case(F):
-                return af.getSecondRegister() & 0xFF;
+                return af.getSecondRegister() & 0xF0;
             
             case(B):
                 return bc.getFirstRegister() & 0xFF;
@@ -89,7 +89,7 @@ public class RegisterManager {
                 return sp.getSecondRegister() & 0xFF;
 
             case(AF):
-                return af.getRegisterPair() & 0xFFFF;
+                return af.getRegisterPair() & 0xFFF0;
 
             case(BC):
                 return bc.getRegisterPair() & 0xFFFF;
@@ -126,7 +126,7 @@ public class RegisterManager {
                 break;
 
             case(F):
-                af.setSecondRegister(value & 0xFF);
+                af.setSecondRegister(value & 0xF0);
                 break;
 
             case(B):
@@ -162,7 +162,7 @@ public class RegisterManager {
                 break;
 
             case(AF):
-                af.setRegisterPair(value & 0xFFFF);
+                af.setRegisterPair(value & 0xFFF0);
                 break;
 
             case(BC):
