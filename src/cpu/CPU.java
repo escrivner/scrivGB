@@ -5,24 +5,23 @@ import java.io.FileWriter;
 
 import addressBus.InterruptRegisters;
 import other.BitManipulator;
+import other.Debugger;
 
 
 public class CPU extends CPUMethods{
     
     public static boolean isDebuggingModeActive = true;
     private Motherboard aBus;
+    private Debugger debugger;
     public int cycleCounter;
     public int delayCounter;
     private BitManipulator bm;
     private RegisterManager rm;
     private DefaultOpcodes dCodes;
     private PrefixOpcodes pCodes;
-    private int currentPC;
+    public int currentPC;
     private int prevOpcode;
     private int currentOpcode;
-    private int tickCounter;
-    private int lineCounter;
-    private FileWriter logWriter;
 
     private final int LEFT = 0;
     private final int RIGHT = 1;
@@ -33,39 +32,23 @@ public class CPU extends CPUMethods{
         super(aBus, rm);
         this.rm = rm;
         this.aBus = aBus;
+        this.debugger = aBus.getDebugger();
         bm = aBus.getBitManipulator();
         dCodes = new DefaultOpcodes(aBus, this, rm);
         pCodes = new PrefixOpcodes(aBus, this, rm);
         rm.writeRegister(PC, 0x100);
 
-        try {
-            logWriter = new FileWriter("gb_log.txt");
-        } catch (Exception e) {
-            System.out.println("Could not create log file.");
-        }
     }
 
     public void tick(){
 
         currentPC = rm.readRegister(PC);
         
-        if(lineCounter > 7000000){
-            try {
-                logWriter.close();
-
-            } catch (Exception e) {
-                // TODO: handle exception
-            }
-            System.exit(0);
-        }
-        
-        
         //if there is an interrupt, handles it and returns
         if(checkForInterrupts()){ return; }
 
         if(cycleCounter <= 0){
-            printCPUState();
-            lineCounter++;
+            debugger.compareProcessorState(getCPUState());
             prevOpcode = currentOpcode;
             currentOpcode = fetch();
         }
@@ -84,9 +67,6 @@ public class CPU extends CPUMethods{
         
         if(cycleCounter > 0){ cycleCounter--;}
         if(delayCounter > 0){ delayCounter--;}
-        tickCounter++;
-
-        
     }
 
     public int fetch(){
@@ -131,9 +111,8 @@ public class CPU extends CPUMethods{
         return true;
     }
 
-    public void printCPUState(){
+    public String getCPUState(){
 
-        
         String a = bm.formatToHex(rm.readRegister(A), 2);
         String f = bm.formatToHex(rm.readRegister(F), 2);
         String b = bm.formatToHex(rm.readRegister(B), 2);
@@ -151,29 +130,9 @@ public class CPU extends CPUMethods{
         String pc2 = bm.formatToHex(aBus.read(pos+2), 2);
         String pc3 = bm.formatToHex(aBus.read(pos+3), 2);
 
-        String opcode = "";
-        String stack = "";
-        //stack = bm.formatToHex(aBus.read(rm.readRegister(SP)), 2) + " " + bm.formatToHex(aBus.read(rm.readRegister(SP+1)), 2) + " ";
-        /*opcode = bm.formatToHex(currentOpcode, 2);
-        if(prevOpcode == 0xCB){
-            opcode = bm.formatToHex(prevOpcode, 2) + bm.formatToHex(currentOpcode, 2);
-        }*/
-        String msg = "A:"+a + " F:" + f + " B:" + b + " C:" + c +" D:" + d + " E:" + e + " H:" + h + " L:" + l + " SP:" + sp + " PC:" + pc + " PCMEM:" + pc0 + "," + pc1 + "," + pc2 + "," + pc3;
-        System.out.println(msg);
+        String msg = "A: "+a + " F: " + f + " B: " + b + " C: " + c +" D: " + d + " E: " + e + " H: "  + h + " L: " + l + " SP: " + sp + " PC: 00:" + pc + " (" + pc0 + " " + pc1 + " " + pc2 + " " + pc3 + ")";
+        return msg;
 
-        try {
-            logWriter.write(msg + "\n");
-        } catch (Exception ex) {
-            System.out.println("Could not write to log file.");
-        }
-    }
-
-    public void writeLog(String msg){
-        try{
-            logWriter.write("\t" + msg + "\n");
-        } catch(Exception e){
-            e.printStackTrace();
-        }
     }
 
     public void addOperationCycles(int cycles){

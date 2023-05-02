@@ -30,8 +30,9 @@ javac cpu/DefaultOpcodes.java
 javac cpu/PrefixOpcodes.java
 
 javac other/BitManipulator.java
+javac other/Debugger.java
 javac ram/RAMBank.java
 javac Main.java
 
 #execution
-java Main $1
+java Main /home/ethan/Programming/GB_Emu/individual/07Jump.gb /home/ethan/Programming/GB_Emu/Blargg7.txt

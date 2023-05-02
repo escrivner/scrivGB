@@ -8,7 +8,6 @@ import java.util.concurrent.TimeUnit;
 
 public class Main {
     
-    private static boolean isDebuggingModeActive = true;
     private static Cartridge cartridge;
     private static Motherboard bus;
     private static CPU cpu;
@@ -16,7 +15,7 @@ public class Main {
     
     public static void main(String[] args) throws InterruptedException{
 
-        bus = new Motherboard(args[0]);
+        bus = new Motherboard(args);
         cartridge = bus.getCartridge();
         cpu = bus.getCPU();
         while(true){

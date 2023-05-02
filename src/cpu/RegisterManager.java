@@ -1,6 +1,8 @@
 package cpu;
 
+import addressBus.Motherboard;
 import other.BitManipulator;
+import other.Debugger;
 
 public class RegisterManager {
     
@@ -32,8 +34,9 @@ public class RegisterManager {
     Register sp;
     Register pc;
     BitManipulator bm;
+    Motherboard bus;
 
-    public RegisterManager(){
+    public RegisterManager(Motherboard bus){
         af = new Register();
         bc = new Register();
         de = new Register();
@@ -41,6 +44,7 @@ public class RegisterManager {
         sp = new Register();
         pc = new Register();
         bm = new BitManipulator();
+        this.bus = bus;
 
         //initial values
         writeRegister(A, 0x01);
@@ -113,7 +117,11 @@ public class RegisterManager {
                 return pc.getSecondRegister() & 0xFF;
 
             default:
-                System.out.println("CPUMethods: Invalid register read!!!");
+
+                
+                bus.getDebugger().printProcessorState();
+                bus.getDebugger().printToConsole("RegisterManager: Invalid Register Read", Debugger.RED);
+                System.exit(0);
                 return -1;
         }
     }
@@ -193,7 +201,9 @@ public class RegisterManager {
                 pc.setSecondRegister(value & 0xFF);
                 break;
             default:
-                System.out.println("CPUMethods: Invalid register write!!!");
+                bus.getDebugger().printProcessorState();
+                bus.getDebugger().printToConsole("RegisterManager: Invalid Register Write", Debugger.RED);
+                System.exit(0);
         }
     }
 

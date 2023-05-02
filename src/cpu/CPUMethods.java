@@ -435,7 +435,7 @@ public class CPUMethods {
 
     public void opcodeRST(int value){
         opcodePUSH(rm.readRegister(PC_P), rm.readRegister(PC_C));
-        rm.writeRegister(PC, value);
+        rm.writeRegister(PC_C, value);
     }
 
 

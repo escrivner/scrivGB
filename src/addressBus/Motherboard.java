@@ -3,6 +3,7 @@ import cartridge.Cartridge;
 import cpu.CPU;
 import cpu.RegisterManager;
 import other.BitManipulator;
+import other.Debugger;
 import ram.RAMBank;
 
 public class Motherboard{
@@ -16,17 +17,20 @@ public class Motherboard{
     private RAMBank RAM;
     private BitManipulator bm;
     private RegisterManager rm;
+    private Debugger debugger;
 
     
     
-    public Motherboard(String romFile){
+    public Motherboard(String[] args){
 
         bm = new BitManipulator();
-        cartridge = new Cartridge(romFile);
-        rm = new RegisterManager();
+        debugger = new Debugger(this, args);
+        cartridge = new Cartridge(this, args[0]);
+        rm = new RegisterManager(this);
         cpu = new CPU(this, rm);
         RAM = new RAMBank((0xFFFF + 1) - 0x8000);
         iRegisters = new InterruptRegisters();
+        
     }
     
     public void write(int value, int address){
@@ -41,19 +45,21 @@ public class Motherboard{
         } else if(address == INTERRUPT_ENABLED_REGISTER){
             iRegisters.writeInterruptEnabledFlags(value);
 
-        } else if(address == 0xFF00){
+        } else if(address == 0xFF01){
             
             char letter = (char) value;
             System.out.print(letter);
         }else if(address < 0x8000){
             System.out.println("Attempted to write to read-only ROM!!!");
+            System.out.println(cpu.getCPUState());
+            System.exit(0);
 
         } else if(address < 0xFFFF+1) {
             int ramAddress = address - 0x8000;
             RAM.write(value, ramAddress);
 
         } else {
-            System.out.println("Attempted to write out of bounds memory address!!! " + address);
+            //System.out.println("Attempted to write out of bounds memory address!!! " + address);
 
         }
     }
@@ -79,6 +85,8 @@ public class Motherboard{
 
         } else {
             System.out.println("Attempted to read out of bounds memory address!!!");
+            System.out.println(cpu.getCPUState());
+            System.exit(0);
             return -1;
         }
     }
@@ -101,5 +109,9 @@ public class Motherboard{
 
     public BitManipulator getBitManipulator(){
         return bm;
+    }
+
+    public Debugger getDebugger(){
+        return debugger;
     }
 }
