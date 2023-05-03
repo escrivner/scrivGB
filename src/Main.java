@@ -20,7 +20,8 @@ public class Main {
         cpu = bus.getCPU();
         while(true){
             executeCPUCycle();
-            //TimeUnit.MILLISECONDS.sleep(15);
+            //TimeUnit.NANOSECONDS.sleep(250);
+
         }
     }
 

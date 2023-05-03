@@ -434,8 +434,32 @@ public class CPUMethods {
     }
 
     public void opcodeRST(int value){
-        opcodePUSH(rm.readRegister(PC_P), rm.readRegister(PC_C));
+        opcodePUSH(PC_P, PC_C);
         rm.writeRegister(PC_C, value);
+    }
+
+    public void opcodeDAA(){
+        int value = rm.readRegister(A);
+        int correction = 0;
+        boolean carryState = false;
+
+        if(rm.isHalfCarryFlagSet() || (!rm.isSubtractionFlagSet() && (value & 0xF) > 9)){
+            correction = correction | 0x6;
+        }
+
+        if(rm.isCarryFlagSet() || (!rm.isSubtractionFlagSet() && value > 0x99)){
+            correction = correction | 0x60;
+            carryState = true;
+        }
+
+        value += rm.isSubtractionFlagSet() ? -correction : correction;
+
+        value = value & 0xFF;
+
+        rm.setZeroFlag(value == 0);
+        rm.setHalfCarryFlag(false);
+        rm.setCarryFlag(carryState);
+        rm.writeRegister(A, value);
     }
 
 

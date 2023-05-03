@@ -35,4 +35,4 @@ javac ram/RAMBank.java
 javac Main.java
 
 #execution
-java Main /home/ethan/Programming/GB_Emu/individual/07Jump.gb /home/ethan/Programming/GB_Emu/Blargg7.txt
+java Main /home/ethan/Programming/GB_Emu/individual/01-special.gb /home/ethan/Programming/GB_Emu/Blargg1.txt

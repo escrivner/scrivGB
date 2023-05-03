@@ -306,6 +306,7 @@ public class DefaultOpcodes extends CPUMethods{
                 break;
 
             case(0x27):
+                opcodeDAA();
                 System.out.println("opcode 0x27 DAA has not been implemented!!!");
                 break;
 

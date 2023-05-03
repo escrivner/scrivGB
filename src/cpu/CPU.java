@@ -21,7 +21,7 @@ public class CPU extends CPUMethods{
     private PrefixOpcodes pCodes;
     public int currentPC;
     private int prevOpcode;
-    private int currentOpcode;
+    public int currentOpcode;
 
     private final int LEFT = 0;
     private final int RIGHT = 1;

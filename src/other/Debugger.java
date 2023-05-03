@@ -17,7 +17,10 @@ public class Debugger {
     public final static int CYAN = 6;
     public final static int WHITE = 7;
 
-    private final boolean isDebuggingModeActive = false;
+    private final boolean isDebuggingModeActive = true;
+    private final boolean printLineMilestones = true;
+    private final int printLineMilestoneSize = 1000;
+
     private final String greenBackgroundCode = "\033[30;42m";
     private final String redBackgroundCode = "\033[30;41m";
     private final String blackCode = "\033[30m";
@@ -29,6 +32,7 @@ public class Debugger {
     private final String yellowCode = "\033[33m";
     private final String purpleCode = "\033[35m";
     private final String defaultCode = "\033[0m";
+    private int lineCounter = 0;
     BufferedReader br;
     Motherboard bus;
     ArrayList<String> previousStates = new ArrayList<String>();
@@ -91,21 +95,24 @@ public class Debugger {
     }
 
     public void printProcessorState(){
-        System.out.println(cyanCode + "Line: " + previousStates.size() + " " +  bus.getCPU().getCPUState() + defaultCode);
+        System.out.println(cyanCode + "Line: " + lineCounter + " Opcode: " + bus.getBitManipulator().formatToHex(bus.getCPU().currentOpcode, 2) + " " + bus.getCPU().getCPUState()+ defaultCode);
     }
 
     public void compareProcessorState(String myLog){
 
+        lineCounter++;
+
+        if(lineCounter % printLineMilestoneSize == 0 && printLineMilestones &&  lineCounter != 0){
+            printToConsole("Passed " + lineCounter + " lines.", GREEN);
+        }
+
+        //returns here is debugging is not active
         if(!isDebuggingModeActive){
             return;
         }
 
         if(bus.getCPU().currentPC < 0x100){
             return;
-        }
-
-        if(previousStates.size() % 50000 == 0){
-            System.out.println("Passed " + previousStates.size() + " lines.");
         }
 
         try {
