@@ -44,6 +44,7 @@ public class CPU extends CPUMethods{
 
         currentPC = rm.readRegister(PC);
         
+        
         //if there is an interrupt, handles it and returns
         if(checkForInterrupts()){ return; }
 

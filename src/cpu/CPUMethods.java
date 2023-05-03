@@ -142,18 +142,18 @@ public class CPUMethods {
 
     public int rotatePreviousCarry8(int value, int direction){
 
-        value = value & 0xFFFF;
+        value = value & 0xFF;
 
         if(direction == LEFT){
             boolean carryValue = bm.isBitSet(value, 7);
-            value = value << 1;
+            value = (value << 1) & 0xFF;
             value = bm.setBit(rm.isCarryFlagSet(), value, 0);
             rm.setCarryFlag(carryValue);
             return value;
 
         } else {
             boolean carryValue = bm.isBitSet(value, 0);
-            value = value >> 1;
+            value = (value >> 1) & 0xFF;
             value = bm.setBit(rm.isCarryFlagSet(), value, 7);
             rm.setCarryFlag(carryValue);
             return value;

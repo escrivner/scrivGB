@@ -225,7 +225,7 @@ public class DefaultOpcodes extends CPUMethods{
                 break;
 
             case(0x1B):
-                opcodeDECNoFlags(BC);
+                opcodeDECNoFlags(DE);
                 cpu.addOperationCycles(2);
                 break;
 
@@ -307,7 +307,6 @@ public class DefaultOpcodes extends CPUMethods{
 
             case(0x27):
                 opcodeDAA();
-                System.out.println("opcode 0x27 DAA has not been implemented!!!");
                 break;
 
             case(0x28):
@@ -1546,8 +1545,8 @@ public class DefaultOpcodes extends CPUMethods{
                 rm.writeRegister(SP, a+b);
                 rm.setZeroFlag(false);
                 rm.setSubtractionFlag(false);
-                checkIncrementHalfCarry16(a, b, 0);
-                checkIncrementCarry16(a, b, 0);
+                checkIncrementHalfCarry8(a, b, 0);
+                checkIncrementCarry8(a, b, 0);
                 cpu.addOperationCycles(4);
                 break;
 
@@ -1633,8 +1632,8 @@ public class DefaultOpcodes extends CPUMethods{
                 rm.writeRegister(HL, a+b);
                 rm.setZeroFlag(false);
                 rm.setSubtractionFlag(false);
-                checkIncrementHalfCarry16(a, b, 0);
-                checkIncrementCarry16(a, b, 0);
+                checkIncrementHalfCarry8(a, b, 0);
+                checkIncrementCarry8(a, b, 0);
                 cpu.addOperationCycles(3);
                 break;
 

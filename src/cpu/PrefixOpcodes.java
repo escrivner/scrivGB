@@ -157,7 +157,7 @@ public class PrefixOpcodes extends CPUMethods{
             case(0x16):
                 a = rm.readRegister(HL);
                 b = bus.read(a);
-                c = rotatePreviousCarry8(a, LEFT);
+                c = rotatePreviousCarry8(b, LEFT);
                 bus.write(c, a);
                 rm.setZeroFlag(c == 0);
                 rm.setSubtractionFlag(false);

@@ -19,7 +19,7 @@ public class Debugger {
 
     private final boolean isDebuggingModeActive = true;
     private final boolean printLineMilestones = true;
-    private final int printLineMilestoneSize = 1000;
+    private final int printLineMilestoneSize = 100000;
 
     private final String greenBackgroundCode = "\033[30;42m";
     private final String redBackgroundCode = "\033[30;41m";
