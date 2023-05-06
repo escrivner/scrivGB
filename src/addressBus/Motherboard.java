@@ -18,6 +18,7 @@ public class Motherboard{
     private BitManipulator bm;
     private RegisterManager rm;
     private Debugger debugger;
+    private Timer timer;
 
     
     
@@ -25,17 +26,20 @@ public class Motherboard{
 
         bm = new BitManipulator();
         debugger = new Debugger(this, args);
+        timer = new Timer(this);
         cartridge = new Cartridge(this, args[0]);
         rm = new RegisterManager(this);
         cpu = new CPU(this, rm);
         RAM = new RAMBank((0xFFFF + 1) - 0x8000);
-        iRegisters = new InterruptRegisters();
+        iRegisters = new InterruptRegisters(this);
         
     }
     
     public void write(int value, int address){
 
         //bitmasks the size of the parameters
+
+        
         value = value & 0xFF;
         address = address & 0xFFFF;
 
@@ -45,7 +49,13 @@ public class Motherboard{
         } else if(address == INTERRUPT_ENABLED_REGISTER){
             iRegisters.writeInterruptEnabledFlags(value);
 
-        } else if(address == 0xFF01){
+        } else if(Timer.lowestAddressRange <= address && address <= Timer.highestAddressRange){
+    
+            debugger.printToConsole("Timer written to", Debugger.YELLOW);
+            //debugger.printPreviousProcessorStates(5);
+            timer.write(address, value);
+            
+        }else if(address == 0xFF01){
             
             char letter = (char) value;
             System.out.print(letter);
@@ -66,7 +76,11 @@ public class Motherboard{
 
     public int read(int address){
 
+        
+
         if(address == INTERRUPT_REQUEST_REGISTER){
+            debugger.printToConsole(iRegisters.readInterruptRequestedFlags() + "", debugger.CYAN);
+
             return iRegisters.readInterruptRequestedFlags();
 
         } else if(address == INTERRUPT_ENABLED_REGISTER){
@@ -76,6 +90,9 @@ public class Motherboard{
             //LCD LY register hardcoded for gameboy doctor
             return 0x90;
 
+        }else if(Timer.lowestAddressRange <= address && address <= Timer.highestAddressRange){
+            return timer.read(address);
+            
         }else if(address < 0x8000){
             return cartridge.read(address);
 
@@ -113,5 +130,9 @@ public class Motherboard{
 
     public Debugger getDebugger(){
         return debugger;
+    }
+
+    public Timer getTimer(){
+        return timer;
     }
 }

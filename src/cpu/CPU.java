@@ -19,6 +19,7 @@ public class CPU extends CPUMethods{
     private RegisterManager rm;
     private DefaultOpcodes dCodes;
     private PrefixOpcodes pCodes;
+    public int currentTick;
     public int currentPC;
     private int prevOpcode;
     public int currentOpcode;
@@ -36,7 +37,7 @@ public class CPU extends CPUMethods{
         bm = aBus.getBitManipulator();
         dCodes = new DefaultOpcodes(aBus, this, rm);
         pCodes = new PrefixOpcodes(aBus, this, rm);
-        rm.writeRegister(PC, 0x100);
+        rm.writeRegister(PC, 0x101);
 
     }
 
@@ -46,10 +47,13 @@ public class CPU extends CPUMethods{
         
         
         //if there is an interrupt, handles it and returns
-        if(checkForInterrupts()){ return; }
+        
 
         if(cycleCounter <= 0){
+            if(checkForInterrupts()){ 
+                return; }
             debugger.compareProcessorState(getCPUState());
+
             prevOpcode = currentOpcode;
             currentOpcode = fetch();
         }
@@ -66,8 +70,11 @@ public class CPU extends CPUMethods{
             pCodes.execute(currentOpcode);
         }
         
+        currentTick++;
         if(cycleCounter > 0){ cycleCounter--;}
         if(delayCounter > 0){ delayCounter--;}
+
+
     }
 
     public int fetch(){
@@ -89,26 +96,39 @@ public class CPU extends CPUMethods{
 
         if(iRegisters.isVBlankInterruptRequested() && iRegisters.isVBlankInterruptEnabled()){
             jumpVector = iRegisters.VBLANK_VECTOR;
+            iRegisters.setVBlankInterruptRequested(false);
 
         } else if(iRegisters.isSTATInterruptRequested() && iRegisters.isSTATInterruptEnabled()){
             jumpVector = iRegisters.STAT_VECTOR;
+            iRegisters.setSTATInterruptRequested(false);
 
         } else if(iRegisters.isTimerInterruptRequested() && iRegisters.isTimerInterruptEnabled()){
             jumpVector = iRegisters.TIMER_VECTOR;
+            iRegisters.setTimerInterruptRequested(false);
 
         } else if(iRegisters.isSerialInterruptRequested() && iRegisters.isSerialInterruptEnabled()){
             jumpVector = iRegisters.SERIAL_VECTOR;
+            iRegisters.setSerialInterruptRequested(false);
 
         } else if(iRegisters.isJoypadInterruptRequested() && iRegisters.isJoypadInterruptEnabled()){
             jumpVector = iRegisters.JOYPAD_VECTOR;
+            iRegisters.setJoypadInterruptRequested(false);
         } else {
             return false;
         }
 
-        push(rm.readRegister(PC));
+        debugger.printToConsole("Interrupt enabled " + bm.formatToHex(jumpVector, 2), Debugger.CYAN);
+        opcodePUSH(PC_P, PC_C);
         rm.writeRegister(PC, jumpVector);
+        currentPC = rm.readRegister(PC);
+        
+        debugger.printToConsole(getCPUState(), Debugger.CYAN);
+        //debugger.compareProcessorState(getCPUState());
+
         iRegisters.disableInterrupts();
+
         cycleCounter += 5;
+
         return true;
     }
 
@@ -123,7 +143,7 @@ public class CPU extends CPUMethods{
         String h = bm.formatToHex(rm.readRegister(H), 2);
         String l = bm.formatToHex(rm.readRegister(L), 2);
         String sp = bm.formatToHex(rm.readRegister(SP), 4);
-        String pc = bm.formatToHex(currentPC, 4);
+        String pc = bm.formatToHex(rm.readRegister(PC), 4);
 
         int pos = rm.readRegister(PC);
         String pc0 = bm.formatToHex(aBus.read(pos), 2);
@@ -138,6 +158,14 @@ public class CPU extends CPUMethods{
 
     public void addOperationCycles(int cycles){
         cycleCounter = cycles;
+    }
+
+    public void addDelay(int cycles){
+        delayCounter = cycles;
+    }
+
+    public int getCurrentDelayTick(){
+        return delayCounter;
     }
 
     public void stop(){

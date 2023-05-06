@@ -17,7 +17,8 @@ public class Debugger {
     public final static int CYAN = 6;
     public final static int WHITE = 7;
 
-    private final boolean isDebuggingModeActive = true;
+    private final boolean isDebuggingModeActive = false;
+    private final boolean printToLogs = false;
     private final boolean printLineMilestones = true;
     private final int printLineMilestoneSize = 100000;
 
@@ -91,11 +92,19 @@ public class Debugger {
                 break;
         }
 
-        System.out.println(colorCode + msg + defaultCode);
+        System.out.println(colorCode + msg + "\t Line: " + (previousStates.size()-1) + defaultCode);
     }
 
     public void printProcessorState(){
-        System.out.println(cyanCode + "Line: " + lineCounter + " Opcode: " + bus.getBitManipulator().formatToHex(bus.getCPU().currentOpcode, 2) + " " + bus.getCPU().getCPUState()+ defaultCode);
+        System.out.println(cyanCode + "Line: " + previousStates.size() + " Opcode: " + bus.getBitManipulator().formatToHex(bus.getCPU().currentOpcode, 2) + " " + bus.getCPU().getCPUState()+ defaultCode);
+    }
+
+    public void printPreviousProcessorStates(int lines){
+
+        for(int i = previousStates.size()-lines; i < previousStates.size(); i++){
+            System.out.println("Line " + i + ":\t" + previousStates.get(i));
+        }
+
     }
 
     public void compareProcessorState(String myLog){
@@ -111,10 +120,6 @@ public class Debugger {
             return;
         }
 
-        if(bus.getCPU().currentPC < 0x100){
-            return;
-        }
-
         try {
             previousStates.add(myLog);
             String testLog = br.readLine();
@@ -125,8 +130,9 @@ public class Debugger {
             }
 
             if(!myLog.equals(testLog)){
+
                 int errorLine = previousStates.size();
-                int previousLine = errorLine - 5;
+                int previousLine = errorLine - 3;
                 String myColoredLog = "";
                 String testColoredLog = "";
                 for(int i = 0; i < testLog.length(); i++){
@@ -143,7 +149,7 @@ public class Debugger {
                     }
                 }
 
-                System.out.println(redCode + "\nCPU state diverges at line " + previousStates.size() + "." + defaultCode);
+                System.out.println(redCode + "\nCPU state diverges at line " + lineCounter + "." + defaultCode);
                 System.out.println("---------------------------------------------------\n");
                 System.out.println(redCode + "My CPU State:\t" + defaultCode + myColoredLog);
                 System.out.println(greenCode + "Test CPU State:\t" + defaultCode + testColoredLog + "\n");

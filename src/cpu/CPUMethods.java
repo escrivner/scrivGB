@@ -91,14 +91,6 @@ public class CPUMethods {
         rm.setHalfCarryFlag(carryState);
     }
 
-    public void push(int value){
-
-    }
-
-    public void jump(int value){
-        
-    }
-
 
     public int rotateThroughCarry8(int value, int direction){
 
@@ -435,7 +427,7 @@ public class CPUMethods {
 
     public void opcodeRST(int value){
         opcodePUSH(PC_P, PC_C);
-        rm.writeRegister(PC_C, value);
+        rm.writeRegister(PC, value);
     }
 
     public void opcodeDAA(){

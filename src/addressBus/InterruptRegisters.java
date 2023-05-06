@@ -1,6 +1,7 @@
 package addressBus;
 
 import other.BitManipulator;
+import other.Debugger;
 
 public class InterruptRegisters {
     
@@ -11,14 +12,33 @@ public class InterruptRegisters {
     public final int SERIAL_VECTOR = 0x0058;
     public final int JOYPAD_VECTOR = 0x0060;
 
+
     //interrupt values
+    public boolean interruptMasterEnableRequested = false;
     private boolean interruptMasterEnableFlag = false;
     private int interruptFlags = 0xE0;
     private int interruptEnabled = 0x00;
     private BitManipulator bm;
+    private Motherboard bus;
+    private int requestEnableTick = 0;
+
+    public InterruptRegisters(Motherboard bus){
+        this.bus = bus;
+        bm = bus.getBitManipulator();
+    }
+
+    public void tick(){
+
+        if(requestEnableTick+1 == bus.getCPU().currentTick && interruptMasterEnableRequested){
+            interruptMasterEnableFlag = true;
+            interruptMasterEnableRequested = false;
+            bus.getDebugger().printToConsole("Master Interrupt Enabled", Debugger.PURPLE);
+        }
+    }
 
     public void enableInterrupts(){
-        interruptMasterEnableFlag = true;
+        requestEnableTick = bus.getCPU().currentTick;
+        interruptMasterEnableRequested = true;
     }
 
     public void disableInterrupts(){
