@@ -12,6 +12,7 @@ public class CPU extends CPUMethods{
     
     public static boolean isDebuggingModeActive = true;
     private Motherboard aBus;
+    private InterruptRegisters iRegisters;
     private Debugger debugger;
     public int cycleCounter;
     public int delayCounter;
@@ -23,6 +24,8 @@ public class CPU extends CPUMethods{
     public int currentPC;
     private int prevOpcode;
     public int currentOpcode;
+    private boolean isHalted = false;
+
 
     private final int LEFT = 0;
     private final int RIGHT = 1;
@@ -34,6 +37,7 @@ public class CPU extends CPUMethods{
         this.rm = rm;
         this.aBus = aBus;
         this.debugger = aBus.getDebugger();
+        this.iRegisters = aBus.getInterruptRegisters();
         bm = aBus.getBitManipulator();
         dCodes = new DefaultOpcodes(aBus, this, rm);
         pCodes = new PrefixOpcodes(aBus, this, rm);
@@ -43,13 +47,26 @@ public class CPU extends CPUMethods{
 
     public void tick(){
 
+        if(isHalted){
+
+            if((iRegisters.readInterruptEnabledFlags() & iRegisters.readInterruptRequestedFlags()) != 0){
+                isHalted = false;
+
+            } else {
+                return;
+            }
+            
+        }
+
         currentPC = rm.readRegister(PC);
-        
         
         //if there is an interrupt, handles it and returns
         
 
         if(cycleCounter <= 0){
+
+
+
             if(checkForInterrupts()){ 
                 return; }
             debugger.compareProcessorState(getCPUState());
@@ -174,6 +191,7 @@ public class CPU extends CPUMethods{
 
     public void halt(){
         System.out.println("HALT instruction read...");
+        isHalted = true;
     }
 
     

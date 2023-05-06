@@ -4,6 +4,7 @@ import cpu.CPU;
 import cpu.RegisterManager;
 import other.BitManipulator;
 import other.Debugger;
+import ppu.Screen;
 import ram.RAMBank;
 
 public class Motherboard{
@@ -19,6 +20,7 @@ public class Motherboard{
     private RegisterManager rm;
     private Debugger debugger;
     private Timer timer;
+    private Screen screen;
 
     
     
@@ -29,9 +31,11 @@ public class Motherboard{
         timer = new Timer(this);
         cartridge = new Cartridge(this, args[0]);
         rm = new RegisterManager(this);
+        iRegisters = new InterruptRegisters(this);
+        screen = new Screen(this);
+        screen.intializeScreen();
         cpu = new CPU(this, rm);
         RAM = new RAMBank((0xFFFF + 1) - 0x8000);
-        iRegisters = new InterruptRegisters(this);
         
     }
     

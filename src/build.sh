@@ -30,6 +30,9 @@ javac cpu/RegisterManager.java
 javac cpu/DefaultOpcodes.java
 javac cpu/PrefixOpcodes.java
 
+javac ppu/PPU.java
+javac ppu/Screen.java
+
 javac other/BitManipulator.java
 javac other/Debugger.java
 javac ram/RAMBank.java
