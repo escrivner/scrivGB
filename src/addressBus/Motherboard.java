@@ -42,7 +42,9 @@ public class Motherboard{
     private CPU cpu;
     private PPU ppu;
     private InterruptRegisters iRegisters;
-    private RAMBank RAM;
+    private RAMBank workRAM;
+    private RAMBank ioRegistersBank;
+    private RAMBank highRAM;
     private BitManipulator bm;
     private RegisterManager rm;
     private Debugger debugger;
@@ -63,8 +65,9 @@ public class Motherboard{
         ppu = new PPU(this);
         screen.intializeScreen();
         cpu = new CPU(this, rm);
-        RAM = new RAMBank((0xFFFF + 1) - 0x8000);
-        
+        workRAM = new RAMBank(0xC000, 0xE000);
+        ioRegistersBank = new RAMBank(0xFF00, 0xFF80);
+        highRAM = new RAMBank(0xFF80, 0xFFFF);
     }
     
     public void write(int value, int address){
@@ -95,6 +98,21 @@ public class Motherboard{
                 ppu.writeLCDC(value);
                 return;
 
+            case(SCX_REGISTER):
+                ppu.writeSCX(value);
+                return;
+
+            case(SCY_REGISTER):
+                ppu.writeSCY(value);
+                return;
+
+            case(WX_REGISTER):
+                ppu.writeWX(value);
+                return;
+
+            case(WY_REGISTER):
+                ppu.writeWX(value);
+
             case(INTERRUPT_REQUEST_REGISTER):
                 iRegisters.writeInterruptRequestedFlags(value);
                 return;
@@ -117,13 +135,52 @@ public class Motherboard{
 
         }
         
-        if(address < 0xFFFF+1) {
-            int ramAddress = address - 0x8000;
-            RAM.write(value, ramAddress);
+        //VRAM memory address range
+        if(0x8000 <= address && address <= 0x9FFF){
+            ppu.writeVRAM(address, value);
             return;
-        } 
+        }
 
-        //System.out.println("Attempted to write out of bounds memory address!!! " + address);
+        //external ram address range located on the cartridge
+        if(0xA000 <= address && address <= 0xBFFF){
+            cartridge.writeExternalRam(address, value);
+            return;
+        }
+
+        //work ram
+        if(0xC000 <= address && address <= 0xDFFF){
+            workRAM.write(value, address);
+            return;
+        }
+
+        //echo ram (mirrors the values within work ram)
+        if(0xE000 <= address && address <= 0xFDFF){
+            int dif = 0xE000 - 0xC000;
+            workRAM.write(value, address - dif);
+            return;
+        }
+
+        //Sprite attribute table (OAM)
+        if(0xFE00 <= address && address <= 0xFE9F){
+            ppu.writeOAM(address, value);
+            return;
+        }
+
+        //not usable (prohibited memory addresses)
+        if(0xFEA0 <= address && address <= 0xFEFF){
+            debugger.printToConsole("Prohibited memory address written to.", Debugger.RED);
+            System.exit(0);
+        }
+
+        if(0xFF00 <= address && address <= 0xFF7F){
+            ioRegistersBank.write(value, address);
+            return;
+        }
+
+        if(0xFF80 <= address && address <= 0xFFFE){
+            highRAM.write(value, address);
+            return;
+        }
     }
 
     public int read(int address){
@@ -165,11 +222,45 @@ public class Motherboard{
             return cartridge.read(address);
         }
         
-        if(address < 0xFFFF+1){
-            int ramAddress = address - 0x8000;
-            return RAM.read(ramAddress);
+        //VRAM memory address range
+        if(0x8000 <= address && address <= 0x9FFF){
+            return ppu.readVRAM(address);
+        }
 
-        } 
+        //external ram address range located on the cartridge
+        if(0xA000 <= address && address <= 0xBFFF){
+            return cartridge.readExternalRam(address);
+        }
+
+        //work ram
+        if(0xC000 <= address && address <= 0xDFFF){
+            return workRAM.read(address);
+        }
+
+        //echo ram (mirrors the values within work ram)
+        if(0xE000 <= address && address <= 0xFDFF){
+            int dif = 0xE000 - 0xC000;
+            return workRAM.read(address - dif);
+        }
+
+        //Sprite attribute table (OAM)
+        if(0xFE00 <= address && address <= 0xFE9F){
+            return ppu.readOAM(address);
+        }
+
+        //not usable (prohibited memory addresses)
+        if(0xFEA0 <= address && address <= 0xFEFF){
+            debugger.printToConsole("Prohibited memory address read.", Debugger.RED);
+            System.exit(0);
+        }
+
+        if(0xFF00 <= address && address <= 0xFF7F){
+            return ioRegistersBank.read(address);
+        }
+
+        if(0xFF80 <= address && address <= 0xFFFE){
+            return highRAM.read(address);
+        }
 
         return 0;
     }
@@ -187,7 +278,7 @@ public class Motherboard{
     }
 
     public RAMBank getRAM(){
-        return RAM;
+        return workRAM;
     }
 
     public BitManipulator getBitManipulator(){

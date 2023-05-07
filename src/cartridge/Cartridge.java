@@ -11,6 +11,7 @@ public class Cartridge {
     
     Motherboard bus;
     int[] rom = new int[0x7FFF+1];
+    int[] externalRam = new int[0xC000 - 0xA000];
 
     public Cartridge(Motherboard bus, String filename){
 
@@ -46,6 +47,13 @@ public class Cartridge {
 
     public int read(int address){
         return rom[address];
+    }
 
+    public int readExternalRam(int address){
+        return externalRam[address - 0xA000];
+    }
+
+    public void writeExternalRam(int address, int value){
+        externalRam[address - 0xA000] = value & 0xFF;
     }
 }
