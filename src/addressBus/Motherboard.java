@@ -9,6 +9,7 @@ import ram.RAMBank;
 
 public class Motherboard{
 
+    public final int LCDC_REGISTER = 0xF40;
     public final int INTERRUPT_REQUEST_REGISTER = 0xFF0F;
     public final int INTERRUPT_ENABLED_REGISTER = 0xFFFF;
 
@@ -138,5 +139,9 @@ public class Motherboard{
 
     public Timer getTimer(){
         return timer;
+    }
+
+    public Screen getScreen(){
+        return screen;
     }
 }

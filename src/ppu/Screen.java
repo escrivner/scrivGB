@@ -22,8 +22,6 @@ public class Screen extends JFrame{
         originalScreen = new BufferedImage(160, 144, BufferedImage.TYPE_INT_RGB);
         scaledScreen = new BufferedImage(160 * screenScaleValue, 144 * screenScaleValue, originalScreen.getType());
         
-        
-
         for (int y = 0; y < originalScreen.getHeight(); y++)
         {
             for (int x = 0; x < originalScreen.getWidth(); x++)
@@ -38,7 +36,10 @@ public class Screen extends JFrame{
         ImageIcon icon = new ImageIcon( scaledScreen );
         add( new JLabel(icon) );
         drawScaledImage();
-        
+    }
+
+    public BufferedImage getBufferedImage(){
+        return originalScreen;
     }
 
     public void drawScaledImage(){
@@ -51,6 +52,7 @@ public class Screen extends JFrame{
 
     public void intializeScreen(){
         JFrame frame = this;
+        frame.setTitle("scrivGB");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLocationByPlatform( true );
         frame.pack();
