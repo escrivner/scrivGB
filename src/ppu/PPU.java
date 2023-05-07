@@ -10,6 +10,9 @@ public class PPU {
 
 
     private int LCDC;
+    private int LY;
+    private int LYC;
+    private int STAT;
     private int SCX;
     private int SCY;
     private int WX;
@@ -37,6 +40,30 @@ public class PPU {
 
     public void writeOAM(int address, int value){
         OAM[address - 0xFE00] = value & 0xFF;
+    }
+
+    public int readLY(){
+        return LY;
+    }
+
+    public void writeLY(int value){
+        LY = value;
+    }
+
+    public int readLYC(){
+        return LYC;
+    }
+
+    public void writeLYC(int value){
+        LYC = value;
+    }
+
+    public int readSTAT(){
+        return STAT;
+    }
+
+    public void writeSTAT(int value){
+        STAT = value;
     }
 
     public int readWX(){

@@ -112,6 +112,15 @@ public class Motherboard{
 
             case(WY_REGISTER):
                 ppu.writeWX(value);
+                return;
+
+            case(LYC_REGISTER):
+                ppu.writeLYC(value);
+                return;
+
+            case(STAT_REGISTER):
+                ppu.writeSTAT(value);
+                return;
 
             case(INTERRUPT_REQUEST_REGISTER):
                 iRegisters.writeInterruptRequestedFlags(value);
@@ -196,7 +205,6 @@ public class Motherboard{
             case(TIMA_REGISTER):
                 return timer.read(TIMA_REGISTER);
                 
-
             case(TMA_REGISTER):
                 return timer.read(TMA_REGISTER);
             
@@ -206,14 +214,22 @@ public class Motherboard{
             case(LCDC_REGISTER):
                 return ppu.readLCDC();
 
+            case(LY_REGISTER):
+                return 0x90;
+                //return ppu.readLY();
+
+            case(LYC_REGISTER):
+                return ppu.readLYC();
+
+            case(STAT_REGISTER):
+                return ppu.readSTAT();
+
             case(INTERRUPT_REQUEST_REGISTER):
                 return iRegisters.readInterruptRequestedFlags();
 
             case(INTERRUPT_ENABLED_REGISTER):
                 return iRegisters.readInterruptEnabledFlags();
                 
-            case(LY_REGISTER):
-                return 0x90;
             
         }
 
