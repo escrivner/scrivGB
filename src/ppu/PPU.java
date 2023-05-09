@@ -1,6 +1,7 @@
 package ppu;
 
 import java.awt.Color;
+import java.awt.MultipleGradientPaint.CycleMethod;
 
 import addressBus.Motherboard;
 import other.BitManipulator;
@@ -24,11 +25,15 @@ public class PPU {
     private int SCY;
     private int WX;
     private int WY;
+    private int DMA;
     private int BGP;
     private int OBP0;
     private int OBP1;
     private int[] VRAM = new int[0x9FFF - 0x8000];
     private int[] OAM = new int[0xFEA0 - 0xFE00];
+
+    private boolean isDMATransferInProgress = false;
+    private int dmaCycleCounter = 0;
 
     private int[] bgPallete = new int[4];
     private int[] objPallete0 = new int[4];
@@ -37,13 +42,27 @@ public class PPU {
     public PPU(Motherboard bus){
         this.bus = bus;
         this.bm = bus.getBitManipulator();
-        palette[0] = new Color(217, 217, 217, 255).getRGB();
-        palette[1] = new Color(179, 179, 179, 255);
-        palette[2] = new Color(115, 115, 115, 255);
     }
 
-    private Pixel[] fetchBackgroundPixels(){
-        
+    public void tick(){
+
+        handleDMATransfer();
+    }
+
+    private void handleDMATransfer(){
+
+        if(dmaCycleCounter > 0){
+            int page = DMA << 8;
+            int index = 160 - dmaCycleCounter;
+            int source = page | index;
+            int destination = 0xFE00 | index;
+            int transferInfo = bus.read(source);
+            writeOAM(destination, transferInfo);
+        }
+
+        if(dmaCycleCounter > 0){
+            dmaCycleCounter--;
+        }
     }
 
     private void displayOAM(){
@@ -85,6 +104,7 @@ public class PPU {
     }
 
     //----------GETTERS AND SETTERS---------------------------------------------------------
+
     public int readVRAM(int address){
         return VRAM[address - 0x8000];
     }
@@ -99,6 +119,15 @@ public class PPU {
 
     public void writeOAM(int address, int value){
         OAM[address - 0xFE00] = value & 0xFF;
+    }
+
+    public int readDMA(){
+        return DMA;
+    }
+
+    public void writeDMA(int value){
+        DMA = value;
+        dmaCycleCounter = 160;
     }
 
     public int readLY(){

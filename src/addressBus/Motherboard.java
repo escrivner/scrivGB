@@ -21,7 +21,6 @@ public class Motherboard{
     public final int TMA_REGISTER = 0xFF06;
     public final int TAC_REGISTER = 0xFF07;
 
-
     public final int LCDC_REGISTER = 0xF40;
     public final int STAT_REGISTER = 0xFF41;
     public final int SCY_REGISTER = 0xFF42;
@@ -37,6 +36,8 @@ public class Motherboard{
 
     public final int INTERRUPT_REQUEST_REGISTER = 0xFF0F;
     public final int INTERRUPT_ENABLED_REGISTER = 0xFFFF;
+
+   
 
     private Cartridge cartridge;
     private CPU cpu;
@@ -132,6 +133,10 @@ public class Motherboard{
 
             case(OBP1_REGISTER):
                 ppu.writeOBP1(value);
+                return;
+
+            case(DMA_REGISTER):
+                ppu.writeDMA(value);
                 return;
 
             case(INTERRUPT_REQUEST_REGISTER):
@@ -244,6 +249,9 @@ public class Motherboard{
 
             case(OBP1_REGISTER):
                 return ppu.readOBP1();
+
+            case(DMA_REGISTER):
+                return ppu.readDMA();
 
             case(INTERRUPT_REQUEST_REGISTER):
                 return iRegisters.readInterruptRequestedFlags();
