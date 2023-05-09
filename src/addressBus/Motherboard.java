@@ -122,6 +122,18 @@ public class Motherboard{
                 ppu.writeSTAT(value);
                 return;
 
+            case(BGP_REGISTER):
+                ppu.writeBGP(value);
+                return;
+
+            case(OBP0_REGISTER):
+                ppu.writeOBP0(value);
+                return;
+
+            case(OBP1_REGISTER):
+                ppu.writeOBP1(value);
+                return;
+
             case(INTERRUPT_REQUEST_REGISTER):
                 iRegisters.writeInterruptRequestedFlags(value);
                 return;
@@ -223,6 +235,15 @@ public class Motherboard{
 
             case(STAT_REGISTER):
                 return ppu.readSTAT();
+
+            case(BGP_REGISTER):
+                return ppu.readBGP();
+
+            case(OBP0_REGISTER):
+                return ppu.readOBP0();
+
+            case(OBP1_REGISTER):
+                return ppu.readOBP1();
 
             case(INTERRUPT_REQUEST_REGISTER):
                 return iRegisters.readInterruptRequestedFlags();

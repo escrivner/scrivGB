@@ -29,12 +29,18 @@ public class Screen extends JFrame{
                 Color color = (y % 2 == 0) ? Color.GRAY : Color.LIGHT_GRAY;
                 int colorValue = color.getRGB();
                 originalScreen.setRGB(x, y, colorValue);
+                originalScreen.set
   
             }
         }
 
         ImageIcon icon = new ImageIcon( scaledScreen );
         add( new JLabel(icon) );
+        drawScaledImage();
+    }
+
+    public void drawPixel(int x, int y, int rgb){
+        originalScreen.setRGB(x, y, rgb);
         drawScaledImage();
     }
 
