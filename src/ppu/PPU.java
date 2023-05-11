@@ -17,8 +17,14 @@ public class PPU {
     private final int DARK_GRAY = new Color(128, 128, 128, 255).getRGB();
     private final int BLACK = new Color(51, 51, 51, 255).getRGB();
 
+    private final int MODE_HBLANK = 0;
+    private final int MODE_VBLANK = 1;
+    private final int MODE_OAM = 2;
+    private final int MODE_DRAW = 3;
+    private int currentMode = MODE_VBLANK;
+
     private int LCDC;
-    private int LY;
+    private int LY = 153;
     private int LYC;
     private int STAT;
     private int SCX;
@@ -34,6 +40,7 @@ public class PPU {
 
     private boolean isDMATransferInProgress = false;
     private int dmaCycleCounter = 0;
+    private int dotsDelay = 0;
 
     private int[] bgPallete = new int[4];
     private int[] objPallete0 = new int[4];
@@ -47,11 +54,81 @@ public class PPU {
     public void tick(){
 
         handleDMATransfer();
+
+        if(dotsDelay == 0 && currentMode == MODE_OAM){
+
+            System.out.println("DRAW MODE");
+            currentMode = MODE_DRAW;
+            drawCurrentLine();
+            dotsDelay = 200;
+        } else if(dotsDelay == 0 && currentMode == MODE_DRAW){
+
+            System.out.println("HBLANK MODE");
+            currentMode = MODE_HBLANK;
+            dotsDelay = 176;
+
+        } else if(dotsDelay == 0 && LY == 143){
+
+            System.out.println("VBLANK MODE");
+            currentMode = MODE_VBLANK;
+            LY++;
+            dotsDelay = 456;
+        } else if(dotsDelay == 0 && currentMode == MODE_HBLANK){
+
+            System.out.println("OAM MODE");
+            LY++;
+            currentMode = MODE_OAM;
+            dotsDelay = 80;
+        } else if(dotsDelay == 0 && currentMode == MODE_VBLANK){
+
+            if(LY < 153){
+
+                System.out.println("VBLANK LINE " + LY);
+                LY++;
+                dotsDelay = 456;
+            } else {
+
+                System.out.println("RESET TO OAM");
+                LY = 0;
+                dotsDelay = 80;
+                currentMode = MODE_OAM;
+            }
+        }
+
+        dotsDelay -= 4;
+    }
+
+    private void drawCurrentLine(){
+
+        for(int i = 0; i < 160; i++){
+
+            int currentSpriteIndex = (i / 8) + ((LY / 8) * 20);
+
+            if(currentSpriteIndex >= 40){
+                return;
+            }
+
+            int xPos = 7 - (i % 8);
+            int yPos = 7 - (LY % 8);
+            int oamIndex = 0xFE00 + (currentSpriteIndex * 4);
+            int tileIndex = readOAM(oamIndex + 2);
+            int first = VRAM[tileIndex + yPos];
+            int second = VRAM[tileIndex + yPos + 16];
+            int color = 0;
+            bm.setBit(bm.isBitSet(first, xPos), color, 0);
+            bm.setBit(bm.isBitSet(second, xPos), color, 1);
+
+            if(color != 0){
+                System.out.println("color not zero");
+            }
+            bus.getScreen().drawPixel(i, LY, color);
+        }
     }
 
     private void handleDMATransfer(){
 
         if(dmaCycleCounter > 0){
+            System.out.println("DMA Transfer handling");
             int page = DMA << 8;
             int index = 160 - dmaCycleCounter;
             int source = page | index;
@@ -69,38 +146,8 @@ public class PPU {
 
         for(int i = 0; i < 144; i++){
 
-            for(int j = 0; j < 160; j++){
-
-                int currentSpriteIndex = (j + ((i * 160))) / 8;
-                int xPos = j % 8;
-                int yPos = i % 8;
-                int oamIndex = 0xFE00 + (currentSpriteIndex * 4);
-                int tileIndex = OAM[oamIndex + 2];
-
-                int first = VRAM[tileIndex + yPos];
-                int second = VRAM[tileIndex + yPos + 16];
-                int color = 0;
-                bm.setBit(bm.isBitSet(first, xPos), color, 0);
-                bm.setBit(bm.isBitSet(second, xPos), color, 1);
-                bus.getScreen().drawPixel(j, i, color);
-            }
+            
         }
-    }
-
-    private Pixel getPixelInBackground(int x, int y){
-
-        int xTile = ((x + SCX) / 8) % 32;
-        int yTile = ((y + SCY) / 8) % 32;
-        int xPixelWithinTile = x % 8;
-        int yPixelWithinTile = y % 8;
-        int basePointer = bm.isBitSet(LCDC, 3) ? 0x9C00 : 0x9800;
-
-    }
-
-    private Pixel getPixelInOBJ(int x, int y, int index){
-
-        int basePointer = 0x8000;
-
     }
 
     //----------GETTERS AND SETTERS---------------------------------------------------------
@@ -110,6 +157,7 @@ public class PPU {
     }
 
     public void writeVRAM(int address, int value){
+        System.out.println("vram written to");
         VRAM[address - 0x8000] = value & 0xFF;
     }
 
@@ -126,6 +174,7 @@ public class PPU {
     }
 
     public void writeDMA(int value){
+        System.out.println("DMA WRITE");
         DMA = value;
         dmaCycleCounter = 160;
     }

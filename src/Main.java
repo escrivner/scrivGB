@@ -3,6 +3,8 @@ import addressBus.Motherboard;
 import addressBus.Timer;
 import cartridge.Cartridge;
 import cpu.CPU;
+import ppu.PPU;
+
 import java.awt.KeyEventDispatcher;
 import java.awt.KeyboardFocusManager;
 import java.awt.event.KeyEvent;
@@ -15,6 +17,7 @@ public class Main {
     private static CPU cpu;
     private static Timer timer;
     private static InterruptRegisters iRegisters;
+    private static PPU ppu;
     private static int cpuTickCounter = 0;
     
     public static void main(String[] args) throws InterruptedException{
@@ -24,19 +27,23 @@ public class Main {
         cpu = bus.getCPU();
         timer = bus.getTimer();
         iRegisters = bus.getInterruptRegisters();
+        ppu = bus.getPPU();
+        long lasttime = System.currentTimeMillis();
         while(true){
-            executeCPUCycle();
-            //TimeUnit.NANOSECONDS.sleep(250);
 
+            long delay = 17 - (System.currentTimeMillis() - lasttime);
+            lasttime = System.currentTimeMillis();
+
+            for(int i = 0; i < 17556; i++){
+                cpu.tick();
+                ppu.tick();
+                timer.tick();
+                iRegisters.tick();
+            }
+            
+            //bus.getScreen().drawScaledImage();
+            TimeUnit.MILLISECONDS.sleep(delay);
         }
-    }
-
-    private static void executeCPUCycle(){
-
-        cpu.tick();
-        timer.tick();
-        iRegisters.tick();
-        cpuTickCounter++;
     }
 
 }

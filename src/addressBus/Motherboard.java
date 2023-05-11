@@ -69,6 +69,8 @@ public class Motherboard{
         workRAM = new RAMBank(0xC000, 0xE000);
         ioRegistersBank = new RAMBank(0xFF00, 0xFF80);
         highRAM = new RAMBank(0xFF80, 0xFFFF);
+
+        write(0xE1, INTERRUPT_REQUEST_REGISTER);
     }
     
     public void write(int value, int address){
@@ -136,6 +138,7 @@ public class Motherboard{
                 return;
 
             case(DMA_REGISTER):
+                System.out.println("DMA REGISTER");
                 ppu.writeDMA(value);
                 return;
 
@@ -258,6 +261,9 @@ public class Motherboard{
 
             case(INTERRUPT_ENABLED_REGISTER):
                 return iRegisters.readInterruptEnabledFlags();
+
+            case(JOYPAD_REGISTER):
+                return 0xFF;
                 
             
         }
@@ -340,5 +346,9 @@ public class Motherboard{
 
     public Screen getScreen(){
         return screen;
+    }
+
+    public PPU getPPU(){
+        return ppu;
     }
 }

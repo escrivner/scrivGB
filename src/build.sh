@@ -39,4 +39,4 @@ javac ram/RAMBank.java
 javac Main.java
 
 #execution
-java Main /home/ethan/Programming/GB_Emu/individual/02-interrupts.gb /home/ethan/Programming/GB_Emu/Blargg2.txt
+java Main /home/ethan/Programming/GB_Emu/tetris.gb /home/ethan/Programming/GB_Emu/Blargg6.txt

@@ -19,8 +19,8 @@ public class Debugger {
 
     private final boolean isDebuggingModeActive = false;
     private final boolean printToLogs = false;
-    private final boolean printLineMilestones = true;
-    private final int printLineMilestoneSize = 100000;
+    private final boolean printLineMilestones = false;
+    private final int printLineMilestoneSize = 500000;
 
     private final String greenBackgroundCode = "\033[30;42m";
     private final String redBackgroundCode = "\033[30;41m";
@@ -111,7 +111,7 @@ public class Debugger {
 
         lineCounter++;
 
-        if(lineCounter % printLineMilestoneSize == 0 && printLineMilestones &&  lineCounter != 0){
+        if(previousStates.size() % printLineMilestoneSize == 0 && printLineMilestones &&  lineCounter != 0){
             printToConsole("Passed " + lineCounter + " lines.", GREEN);
         }
 
