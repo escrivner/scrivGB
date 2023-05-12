@@ -41,7 +41,7 @@ public class Main {
                 iRegisters.tick();
             }
             
-            //bus.getScreen().drawScaledImage();
+            bus.getScreen().drawScaledImage();
             TimeUnit.MILLISECONDS.sleep(delay);
         }
     }

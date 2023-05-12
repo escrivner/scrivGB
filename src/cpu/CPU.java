@@ -69,7 +69,7 @@ public class CPU extends CPUMethods{
 
             if(checkForInterrupts()){ 
                 return; }
-            //debugger.compareProcessorState(getCPUState());
+            debugger.compareProcessorState(getCPUState());
             //debugger.printProcessorState();
             prevOpcode = currentOpcode;
             currentOpcode = fetch();
@@ -111,7 +111,7 @@ public class CPU extends CPUMethods{
             return false;
         }
 
-        System.out.println("Master interrupt flag enabled");
+        //System.out.println("Master interrupt flag enabled");
 
         if(iRegisters.isVBlankInterruptRequested() && iRegisters.isVBlankInterruptEnabled()){
             jumpVector = iRegisters.VBLANK_VECTOR;

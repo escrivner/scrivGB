@@ -158,9 +158,9 @@ public class Motherboard{
 
        
         if(address < 0x8000){
-            System.out.println("Attempted to write to read-only ROM!!!");
-            System.out.println(cpu.getCPUState());
-            System.exit(0);
+            System.out.println("Attempted to write to read-only ROM!!! " + bm.formatToHex(address, 4));
+            //debugger.printPreviousProcessorStates(5);
+            //System.exit(0);
 
         }
         
@@ -198,7 +198,7 @@ public class Motherboard{
         //not usable (prohibited memory addresses)
         if(0xFEA0 <= address && address <= 0xFEFF){
             debugger.printToConsole("Prohibited memory address written to.", Debugger.RED);
-            System.exit(0);
+            //System.exit(0);
         }
 
         if(0xFF00 <= address && address <= 0xFF7F){
@@ -235,8 +235,8 @@ public class Motherboard{
                 return ppu.readLCDC();
 
             case(LY_REGISTER):
-                return 0x90;
-                //return ppu.readLY();
+                //return 0x90;
+                return ppu.readLY();
 
             case(LYC_REGISTER):
                 return ppu.readLYC();

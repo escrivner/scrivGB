@@ -24,6 +24,7 @@ public class Screen extends JFrame{
         ImageIcon icon = new ImageIcon( scaledScreen );
         add( new JLabel(icon) );
         drawScaledImage();
+        blankScreen();
     }
 
     public void drawPixel(int x, int y, int rgb){

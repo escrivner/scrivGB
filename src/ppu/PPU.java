@@ -35,7 +35,7 @@ public class PPU {
     private int BGP;
     private int OBP0;
     private int OBP1;
-    private int[] VRAM = new int[0x9FFF - 0x8000];
+    private int[] VRAM = new int[(0x9FFF+1) - 0x8000];
     private int[] OAM = new int[0xFEA0 - 0xFE00];
 
     private boolean isDMATransferInProgress = false;
@@ -57,25 +57,25 @@ public class PPU {
 
         if(dotsDelay == 0 && currentMode == MODE_OAM){
 
-            System.out.println("DRAW MODE");
+            //System.out.println("DRAW MODE");
             currentMode = MODE_DRAW;
             drawCurrentLine();
             dotsDelay = 200;
         } else if(dotsDelay == 0 && currentMode == MODE_DRAW){
 
-            System.out.println("HBLANK MODE");
+            //System.out.println("HBLANK MODE");
             currentMode = MODE_HBLANK;
             dotsDelay = 176;
 
         } else if(dotsDelay == 0 && LY == 143){
 
-            System.out.println("VBLANK MODE");
+            //System.out.println("VBLANK MODE");
             currentMode = MODE_VBLANK;
             LY++;
             dotsDelay = 456;
         } else if(dotsDelay == 0 && currentMode == MODE_HBLANK){
 
-            System.out.println("OAM MODE");
+            //System.out.println("OAM MODE");
             LY++;
             currentMode = MODE_OAM;
             dotsDelay = 80;
@@ -83,12 +83,12 @@ public class PPU {
 
             if(LY < 153){
 
-                System.out.println("VBLANK LINE " + LY);
+                //System.out.println("VBLANK LINE " + LY);
                 LY++;
                 dotsDelay = 456;
             } else {
 
-                System.out.println("RESET TO OAM");
+                //System.out.println("RESET TO OAM");
                 LY = 0;
                 dotsDelay = 80;
                 currentMode = MODE_OAM;
@@ -115,13 +115,15 @@ public class PPU {
             int first = VRAM[tileIndex + yPos];
             int second = VRAM[tileIndex + yPos + 16];
             int color = 0;
-            bm.setBit(bm.isBitSet(first, xPos), color, 0);
-            bm.setBit(bm.isBitSet(second, xPos), color, 1);
+            color = bm.setBit(bm.isBitSet(first, xPos), color, 0);
+            color = bm.setBit(bm.isBitSet(second, xPos), color, 1);
 
+            int rgb = bm.isBitSet(readOAM(oamIndex + 3), 4) ? objPallete1[color] : objPallete0[color];
+            
             if(color != 0){
-                System.out.println("color not zero");
+                System.out.println("color is not zero " + color);
             }
-            bus.getScreen().drawPixel(i, LY, color);
+            bus.getScreen().drawPixel(i, LY, rgb);
         }
     }
 
@@ -142,11 +144,23 @@ public class PPU {
         }
     }
 
-    private void displayOAM(){
+    private int convertColorToRGB(int colorCode){
 
-        for(int i = 0; i < 144; i++){
+        switch(colorCode){
+            case(0):
+                return WHITE;
 
-            
+            case(1):
+                return LIGHT_GRAY;
+
+            case(2):
+                return DARK_GRAY;
+
+            case(3):
+                return BLACK;
+
+            default:
+                return WHITE;
         }
     }
 
@@ -157,7 +171,6 @@ public class PPU {
     }
 
     public void writeVRAM(int address, int value){
-        System.out.println("vram written to");
         VRAM[address - 0x8000] = value & 0xFF;
     }
 
@@ -248,7 +261,25 @@ public class PPU {
     }
 
     public void writeBGP(int value){
+
         BGP = value;
+
+        int color0 = bm.setBit(bm.isBitSet(value, 0), value, 0);
+        color0 = bm.setBit(bm.isBitSet(value, 1), value, 1);
+        bgPallete[0] = convertColorToRGB(color0);
+
+        int color1 = bm.setBit(bm.isBitSet(value, 2), value, 0);
+        color1 = bm.setBit(bm.isBitSet(value, 3), value, 1);
+        bgPallete[1] = convertColorToRGB(color1);
+
+        int color2 = bm.setBit(bm.isBitSet(value, 4), value, 0);
+        color2 = bm.setBit(bm.isBitSet(value, 5), value, 1);
+        bgPallete[2] = convertColorToRGB(color2);
+
+        int color3 = bm.setBit(bm.isBitSet(value, 6), value, 0);
+        color3 = bm.setBit(bm.isBitSet(value, 7), value, 1);
+        bgPallete[3] = convertColorToRGB(color3);
+
     }
 
     public int readOBP0(){
@@ -256,7 +287,22 @@ public class PPU {
     }
 
     public void writeOBP0(int value){
+
         OBP0 = value;
+
+        objPallete0[0] = TRANSPARENT;
+
+        int color1 = bm.setBit(bm.isBitSet(value, 2), value, 0);
+        color1 = bm.setBit(bm.isBitSet(value, 3), value, 1);
+        objPallete0[1] = convertColorToRGB(color1);
+
+        int color2 = bm.setBit(bm.isBitSet(value, 4), value, 0);
+        color2 = bm.setBit(bm.isBitSet(value, 5), value, 1);
+        objPallete0[2] = convertColorToRGB(color2);
+
+        int color3 = bm.setBit(bm.isBitSet(value, 6), value, 0);
+        color3 = bm.setBit(bm.isBitSet(value, 7), value, 1);
+        objPallete0[3] = convertColorToRGB(color3);
     }
 
     public int readOBP1(){
@@ -265,6 +311,20 @@ public class PPU {
 
     public void writeOBP1(int value){
         OBP1 = value;
+
+        objPallete1[0] = TRANSPARENT;
+
+        int color1 = bm.setBit(bm.isBitSet(value, 2), value, 0);
+        color1 = bm.setBit(bm.isBitSet(value, 3), value, 1);
+        objPallete1[1] = convertColorToRGB(color1);
+
+        int color2 = bm.setBit(bm.isBitSet(value, 4), value, 0);
+        color2 = bm.setBit(bm.isBitSet(value, 5), value, 1);
+        objPallete1[2] = convertColorToRGB(color2);
+
+        int color3 = bm.setBit(bm.isBitSet(value, 6), value, 0);
+        color3 = bm.setBit(bm.isBitSet(value, 7), value, 1);
+        objPallete1[3] = convertColorToRGB(color3);
     }
 
     public int getLCDEnabled(){

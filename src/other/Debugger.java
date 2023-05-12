@@ -110,6 +110,7 @@ public class Debugger {
     public void compareProcessorState(String myLog){
 
         lineCounter++;
+        previousStates.add(myLog);
 
         if(previousStates.size() % printLineMilestoneSize == 0 && printLineMilestones &&  lineCounter != 0){
             printToConsole("Passed " + lineCounter + " lines.", GREEN);
@@ -121,7 +122,6 @@ public class Debugger {
         }
 
         try {
-            previousStates.add(myLog);
             String testLog = br.readLine();
 
             if(testLog == null){
